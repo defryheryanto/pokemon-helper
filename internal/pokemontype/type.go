@@ -1,16 +1,16 @@
 package pokemontype
 
 type IType interface {
-	WeakAgainst() []*Type
-	StrongAgainst() []*Type
+	WeakAgainst() []IType
+	StrongAgainst() []IType
 }
 
 type Type string
 
-func (t Type) WeakAgainst() []*Type {
-	return nil
+func (t Type) WeakAgainst() []IType {
+	return GetWeakness(t)
 }
 
-func (t Type) StrongAgainst() []*Type {
-	return nil
+func (t Type) StrongAgainst() []IType {
+	return GetEffective(t)
 }

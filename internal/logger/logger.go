@@ -7,8 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/defry256/pokemon-helper/pkg/errors"
-
+	"github.com/defry256/pokemon-helper/internal/errors"
 	"go.uber.org/zap"
 )
 

@@ -11,7 +11,7 @@ import (
 	"github.com/defry256/pokemon-helper/config"
 	"github.com/defry256/pokemon-helper/config/env"
 	"github.com/defry256/pokemon-helper/internal/httpserver"
-	"github.com/defry256/pokemon-helper/pkg/logger"
+	"github.com/defry256/pokemon-helper/internal/logger"
 )
 
 func main() {

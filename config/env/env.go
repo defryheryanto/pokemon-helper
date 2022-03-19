@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/defry256/pokemon-helper/config"
-	"github.com/defry256/pokemon-helper/pkg/logger"
+	"github.com/defry256/pokemon-helper/internal/logger"
 	"github.com/joho/godotenv"
 )
 

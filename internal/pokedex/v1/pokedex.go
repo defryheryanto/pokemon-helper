@@ -1,7 +1,6 @@
 package pokedex
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -54,7 +53,6 @@ func (s *Service) GetPokedex(pokemonName string) *pokemon.PokemonData {
 				s.Find("tr").Each(func(i int, s2 *goquery.Selection) {
 					if s2.ChildrenFiltered("th").Text() == "Type" && data.Types == nil {
 						types := []pokemontype.IType{}
-						fmt.Println(s2.ChildrenFiltered("td").Html())
 						for _, pokemonType := range strings.Split(s2.ChildrenFiltered("td").First().Text(), " ") {
 							if pokemonType != "" {
 								types = append(types, pokemontype.Type(strings.ReplaceAll(pokemonType, "\n", "")))

@@ -3,8 +3,10 @@ package httpserver
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/defry256/pokemon-helper/internal/app"
+	"github.com/defry256/pokemon-helper/internal/httpserver/handler/pokedex"
 	"github.com/gorilla/mux"
 )
 
@@ -15,5 +17,7 @@ func HandleRoutes(a *app.App) http.Handler {
 		json.NewEncoder(rw).Encode("success")
 	})
 
-	return root
+	root.HandleFunc("/api/v1/pokemon/{pokemonName}", pokedex.GetPokedex(a)).Methods(http.MethodGet)
+
+	return http.TimeoutHandler(root, 30*time.Second, "Request Timeout")
 }

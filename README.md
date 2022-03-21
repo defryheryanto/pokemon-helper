@@ -1,4 +1,4 @@
-# Pokemon Helper (On Going)
+# Pokemon Helper
 Your pokemon helper, here you can get pokemon infos, and simulate your team.
 
 # Features
@@ -166,7 +166,7 @@ Response
 }
 ```
 
-## Types Suggestion
+## Types Suggestion ```/api/v1/type/suggestion```
 Return types suggestion -> which type will be covered most other types by super effective attack<br>
 Example:<br>
 Payload
@@ -199,3 +199,4 @@ Response
 
 ## Note
 The author will work on this repository on free time only :)
+How to collaborate? Just open a PR, and fill the "What's New" and the "Purpose" section

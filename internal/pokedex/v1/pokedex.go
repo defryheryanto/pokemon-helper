@@ -57,8 +57,9 @@ func (s *Service) GetPokedex(pokemonName string) *pokemon.PokemonData {
 					if s2.ChildrenFiltered("th").Text() == "Type" && data.Types == nil {
 						types := []pokemontype.IType{}
 						for _, pokemonType := range strings.Split(s2.ChildrenFiltered("td").First().Text(), " ") {
-							if pokemonType != "" {
-								types = append(types, pokemontype.Type(strings.ReplaceAll(pokemonType, "\n", "")))
+							newType := pokemontype.Type(strings.ReplaceAll(pokemonType, "\n", ""))
+							if newType != "" {
+								types = append(types, newType)
 							}
 						}
 						data.Types = types

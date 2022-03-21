@@ -23,6 +23,10 @@ func SimulateTeam(application *app.App) http.HandlerFunc {
 			return errors.NewBadRequestError(err.Error())
 		}
 
+		if len(p.Pokemons) > 6 {
+			return errors.NewBadRequestError("Team must not exceed 6 pokemons")
+		}
+
 		pokemons := []*pokemon.PokemonData{}
 		for _, p := range p.Pokemons {
 			poke := application.Pokedex.GetPokedex(p)

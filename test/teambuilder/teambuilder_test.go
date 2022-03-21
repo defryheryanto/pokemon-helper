@@ -36,7 +36,7 @@ func equalTypes(types1 []pokemontype.IType, types2 []pokemontype.IType, typesNam
 	return nil
 }
 
-func TestTeamBuilder(test *testing.T) {
+func TestTypeCoverage(test *testing.T) {
 	pokemonNames := []string{"gengar", "machamp"}
 	expectedCoveredTypes := []pokemontype.IType{
 		pokemontype.PsychicType,
@@ -73,6 +73,31 @@ func TestTeamBuilder(test *testing.T) {
 	}
 
 	err = equalTypes(uncoveredTypes, expectedUncoveredTypes, "uncoveredTypes")
+	if err != nil {
+		test.Fatal(err)
+	}
+}
+
+func TestSuggestedTypes(test *testing.T) {
+	uncoveredTypes := []pokemontype.IType{
+		pokemontype.NormalType,
+		pokemontype.IceType,
+		pokemontype.RockType,
+		pokemontype.DarkType,
+		pokemontype.SteelType,
+		pokemontype.GroundType,
+		pokemontype.FireType,
+	}
+
+	expectedSuggestedTypes := []pokemontype.IType{
+		pokemontype.FightingType,
+		pokemontype.GroundType,
+		pokemontype.WaterType,
+	}
+
+	service := setupService()
+	suggestedTypes := service.CalculateSuggestedType(uncoveredTypes, 3)
+	err := equalTypes(suggestedTypes, expectedSuggestedTypes, "suggestedTypes")
 	if err != nil {
 		test.Fatal(err)
 	}

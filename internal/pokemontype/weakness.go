@@ -1,6 +1,9 @@
 package pokemontype
 
 var weakToElements = map[IType][]IType{
+	NormalType: {
+		FightingType,
+	},
 	FireType: {
 		WaterType,
 		GroundType,

@@ -33,6 +33,36 @@ func (s *Service) CalculateTypeCoverage(pokemonNames []string) (typeCovered, typ
 	return typeCovered, typeUncovered, err
 }
 
+func (s *Service) CalculateSuggestedType(uncoveredTypes []pokemontype.IType, suggestLength int) []pokemontype.IType {
+	suggestedTypeScore := map[pokemontype.IType]int{}
+
+	for key := range getTypesMap() {
+		suggestedTypeScore[key] = 0
+	}
+
+	for _, uncoveredType := range uncoveredTypes {
+		for _, weakAgainst := range uncoveredType.WeakAgainst() {
+			suggestedTypeScore[weakAgainst] += 1
+		}
+	}
+
+	finalSuggestedTypes := []pokemontype.IType{}
+	for i := 0; i < suggestLength; i++ {
+		var maxType pokemontype.IType
+		maxValue := 0
+		for key, value := range suggestedTypeScore {
+			if value > maxValue {
+				maxType = key
+				maxValue = value
+			}
+		}
+		delete(suggestedTypeScore, maxType)
+		finalSuggestedTypes = append(finalSuggestedTypes, maxType)
+	}
+
+	return finalSuggestedTypes
+}
+
 func getUncoveredType(typeCovered []pokemontype.IType) []pokemontype.IType {
 	uncoveredMap := getTypesMap()
 

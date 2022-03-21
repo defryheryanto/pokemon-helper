@@ -8,9 +8,9 @@ type IType interface {
 type Type string
 
 func (t Type) WeakAgainst() []IType {
-	return GetWeakness(t)
+	return getWeakness(t)
 }
 
 func (t Type) StrongAgainst() []IType {
-	return GetEffective(t)
+	return getEffective(t)
 }

@@ -87,6 +87,6 @@ var effectiveElements = map[IType][]IType{
 	},
 }
 
-func GetEffective(elements IType) []IType {
+func getEffective(elements IType) []IType {
 	return effectiveElements[elements]
 }

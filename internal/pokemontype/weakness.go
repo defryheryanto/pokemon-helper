@@ -87,6 +87,6 @@ var weakToElements = map[IType][]IType{
 	},
 }
 
-func GetWeakness(element IType) []IType {
+func getWeakness(element IType) []IType {
 	return weakToElements[element]
 }

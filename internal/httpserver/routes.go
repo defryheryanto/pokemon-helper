@@ -20,6 +20,7 @@ func HandleRoutes(a *app.App) http.Handler {
 
 	root.HandleFunc("/api/v1/pokemon/{pokemonName}", pokedex.GetPokedex(a)).Methods(http.MethodGet)
 	root.HandleFunc("/api/v1/simulate-team", teambuilder.SimulateTeam(a)).Methods(http.MethodGet)
+	root.HandleFunc("/api/v1/type/suggestion", teambuilder.GetTypesSuggestion(a)).Methods(http.MethodGet)
 
 	return http.TimeoutHandler(root, 30*time.Second, "Request Timeout")
 }

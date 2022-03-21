@@ -19,6 +19,7 @@ func SimulateTeam(application *app.App) http.HandlerFunc {
 	return handler.Handle(func(w http.ResponseWriter, r *http.Request) error {
 		type payload struct {
 			Pokemons           []string `json:"pokemons"`
+			WithPokemonData    bool     `json:"with_pokemon_data"`
 			WithTypeSuggestion bool     `json:"with_type_suggestion"`
 		}
 
@@ -33,12 +34,14 @@ func SimulateTeam(application *app.App) http.HandlerFunc {
 		}
 
 		teamResponse := map[string]interface{}{}
-		pokemons := []*pokemon.PokemonData{}
-		for _, p := range p.Pokemons {
-			poke := application.Pokedex.GetPokedex(p)
-			pokemons = append(pokemons, poke)
+		if p.WithPokemonData {
+			pokemons := []*pokemon.PokemonData{}
+			for _, p := range p.Pokemons {
+				poke := application.Pokedex.GetPokedex(p)
+				pokemons = append(pokemons, poke)
+			}
+			teamResponse["pokemons"] = pokemons
 		}
-		teamResponse["pokemons"] = pokemons
 
 		coveredTypes, uncoveredTypes, err := application.TeamBuilder.CalculateTypeCoverage(p.Pokemons)
 		if err != nil {

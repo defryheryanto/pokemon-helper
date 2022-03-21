@@ -9,6 +9,7 @@ import (
 	"github.com/defry256/pokemon-helper/internal/httpserver/handler"
 	"github.com/defry256/pokemon-helper/internal/httpserver/response"
 	"github.com/defry256/pokemon-helper/internal/pokemon"
+	"github.com/defry256/pokemon-helper/internal/pokemontype"
 )
 
 const (
@@ -57,6 +58,38 @@ func SimulateTeam(application *app.App) http.HandlerFunc {
 		}
 
 		response.WithData(w, http.StatusOK, teamResponse)
+		return nil
+	})
+}
+
+func GetTypesSuggestion(application *app.App) http.HandlerFunc {
+	return handler.Handle(func(w http.ResponseWriter, r *http.Request) error {
+		type payload struct {
+			UncoveredTypes   []string `json:"uncovered_types"`
+			SuggestionLength int      `json:"suggestion_length"`
+		}
+
+		var p *payload
+		err := json.NewDecoder(r.Body).Decode(&p)
+		if err != nil {
+			return errors.NewBadRequestError(err.Error())
+		}
+
+		uncoveredTypes := []pokemontype.IType{}
+		for _, uncoveredType := range p.UncoveredTypes {
+			uncoveredTypes = append(uncoveredTypes, pokemontype.Type(uncoveredType))
+		}
+
+		suggestionLength := 10
+		if p.SuggestionLength != 0 {
+			suggestionLength = p.SuggestionLength
+		}
+
+		suggestionTypes := application.TeamBuilder.CalculateSuggestedType(uncoveredTypes, suggestionLength)
+
+		response.WithData(w, http.StatusOK, map[string]interface{}{
+			"suggestion_types": suggestionTypes,
+		})
 		return nil
 	})
 }

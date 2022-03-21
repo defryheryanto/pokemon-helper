@@ -56,8 +56,10 @@ func (s *Service) CalculateSuggestedType(uncoveredTypes []pokemontype.IType, sug
 				maxValue = value
 			}
 		}
-		delete(suggestedTypeScore, maxType)
-		finalSuggestedTypes = append(finalSuggestedTypes, maxType)
+		if maxType != nil {
+			delete(suggestedTypeScore, maxType)
+			finalSuggestedTypes = append(finalSuggestedTypes, maxType)
+		}
 	}
 
 	return finalSuggestedTypes

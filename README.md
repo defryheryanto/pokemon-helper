@@ -130,7 +130,6 @@ Response
                 "total": 540
             },
             "types": [
-                "",
                 "Water",
                 "Flying"
             ]

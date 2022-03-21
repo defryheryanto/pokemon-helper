@@ -4,7 +4,7 @@ Your pokemon helper, here you can get pokemon infos, and simulate your team.
 # Features
 ## Get Pokemon Data ```/api/v1/pokemon/{pokemonName}```
 Get pokemon data by name
-Example: ```{base_url}/api/v1/pokemon/dragonite```
+Example:
 Response:
 ```
 {
@@ -162,6 +162,37 @@ Response
         "Water",
         "Dark",
         "Poison"
+    ]
+}
+```
+
+## Types Suggestion
+Return types suggestion -> which type will be covered most other types by super effective attack<br>
+Example:<br>
+Payload
+```
+{
+    "uncovered_types": [
+        "Normal",
+        "Electric",
+        "Poison",
+        "Dark",
+        "Water"
+    ],
+    "suggestion_length": 15
+}
+```
+Response
+```
+{
+    "suggestion_types": [
+        "Fighting",
+        "Ground",
+        "Psychic",
+        "Grass",
+        "Electric",
+        "Bug",
+        "Fairy"
     ]
 }
 ```

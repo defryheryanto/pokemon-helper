@@ -26,7 +26,10 @@ func CollyCollectorOption(c *colly.Collector) Option {
 }
 
 func defaultCollector() *colly.Collector {
-	return colly.NewCollector()
+	return colly.NewCollector(
+		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"),
+		colly.AllowURLRevisit(),
+	)
 }
 
 func NewService(options ...Option) *Service {

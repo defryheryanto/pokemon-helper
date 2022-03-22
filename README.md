@@ -198,4 +198,3 @@ Response
 
 ## Note
 The author will work on this repository on free time only :)
-How to collaborate? Just open a PR, and fill the "What's New" and the "Purpose" section

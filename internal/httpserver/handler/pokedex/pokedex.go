@@ -10,6 +10,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func GetAllPokedex(application *app.App) http.HandlerFunc {
+	return handler.Handle(func(w http.ResponseWriter, r *http.Request) error {
+		search := r.URL.Query().Get("search")
+		pokemons := application.Pokedex.GetAllPokedex(search)
+
+		response.WithData(w, http.StatusOK, map[string]interface{}{
+			"pokemons": pokemons,
+		})
+		return nil
+	})
+}
+
 func GetPokedex(application *app.App) http.HandlerFunc {
 	return handler.Handle(func(w http.ResponseWriter, r *http.Request) error {
 		pokemoNname := mux.Vars(r)["pokemonName"]

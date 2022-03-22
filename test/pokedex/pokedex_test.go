@@ -9,6 +9,24 @@ import (
 	"github.com/defry256/pokemon-helper/internal/pokemontype"
 )
 
+func TestGetAllPokemonData(test *testing.T) {
+	service := pokedex.NewService()
+	pokemons := service.GetAllPokedex("")
+	for _, poke := range pokemons {
+		if poke.Name == "" {
+			test.Fatalf("Pokemon name is empty")
+		}
+	}
+}
+
+func TestSearchPokedex(test *testing.T) {
+	service := pokedex.NewService()
+	pokemons := service.GetAllPokedex("bulba")
+	if pokemons[0].Name != "Bulbasaur" {
+		test.Fatalf(fmt.Sprintf("Pokemon Name Expected: Bulbasaur, Got: %s", pokemons[0].Name))
+	}
+}
+
 func TestGetPokemonData(test *testing.T) {
 	pokemonName := "geodude"
 	expectedData := &pokemon.PokemonData{

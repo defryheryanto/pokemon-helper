@@ -18,6 +18,7 @@ func HandleRoutes(a *app.App) http.Handler {
 		json.NewEncoder(rw).Encode("success")
 	})
 
+	root.HandleFunc("/api/v1/pokemons", pokedex.GetAllPokedex(a)).Methods(http.MethodGet)
 	root.HandleFunc("/api/v1/pokemon/{pokemonName}", pokedex.GetPokedex(a)).Methods(http.MethodGet)
 	root.HandleFunc("/api/v1/simulate-team", teambuilder.SimulateTeam(a)).Methods(http.MethodGet)
 	root.HandleFunc("/api/v1/type/suggestion", teambuilder.GetTypesSuggestion(a)).Methods(http.MethodGet)

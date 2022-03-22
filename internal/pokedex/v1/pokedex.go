@@ -43,6 +43,54 @@ func NewService(options ...Option) *Service {
 	return scraper
 }
 
+func (s *Service) GetAllPokedex(search string) []*pokemon.PokemonData {
+	pokemons := []*pokemon.PokemonData{}
+
+	s.c.OnHTML("table[id=pokedex]", func(h *colly.HTMLElement) {
+		h.DOM.Find("tr").Each(func(i int, s *goquery.Selection) {
+			pokemonName := s.Find(".cell-name").ChildrenFiltered(".ent-name").Text()
+			search := h.Request.Ctx.Get("search")
+			if pokemonName != "" && strings.Contains(strings.ToUpper(pokemonName), strings.ToUpper(search)) {
+				pokemonData := &pokemon.PokemonData{}
+				pokemonData.Name = pokemonName
+
+				types := []pokemontype.IType{}
+				s.Find(".cell-icon").ChildrenFiltered(".type-icon").Each(func(i int, s2 *goquery.Selection) {
+					types = append(types, pokemontype.Type(s2.Text()))
+				})
+				pokemonData.Types = types
+
+				status := &pokemon.Status{}
+				s.Find(".cell-num").Each(func(i int, s2 *goquery.Selection) {
+					if i == 1 {
+						status.HP, _ = strconv.Atoi(s2.Text())
+					} else if i == 2 {
+						status.Attack, _ = strconv.Atoi(s2.Text())
+					} else if i == 3 {
+						status.Defense, _ = strconv.Atoi(s2.Text())
+					} else if i == 4 {
+						status.SpecialAttack, _ = strconv.Atoi(s2.Text())
+					} else if i == 5 {
+						status.SpecialDefense, _ = strconv.Atoi(s2.Text())
+					} else if i == 6 {
+						status.Speed, _ = strconv.Atoi(s2.Text())
+					}
+				})
+				status.CalculateTotal()
+				pokemonData.BaseStatus = status
+				pokemons = append(pokemons, pokemonData)
+			}
+		})
+	})
+
+	s.c.OnRequest(func(r *colly.Request) {
+		r.Ctx.Put("search", search)
+	})
+
+	s.c.Visit(POKEDEX_SOURCE + "all")
+	return pokemons
+}
+
 func (s *Service) GetPokedex(pokemonName string) *pokemon.PokemonData {
 	var data *pokemon.PokemonData
 

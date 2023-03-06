@@ -1,5 +1,6 @@
 # Pokemon Helper
 Your pokemon helper, here you can get pokemon infos, and simulate your team.
+(This Pokemon data are scraped from pokemondb.net)
 
 # Features
 ## Get Pokemon Data ```/api/v1/pokemon/{pokemonName}```

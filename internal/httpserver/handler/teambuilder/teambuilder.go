@@ -38,13 +38,13 @@ func SimulateTeam(application *app.App) http.HandlerFunc {
 		if p.WithPokemonData {
 			pokemons := []*pokemon.PokemonData{}
 			for _, p := range p.Pokemons {
-				poke := application.Pokedex.GetPokedex(p)
+				poke := application.Pokedex.GetPokedex(r.Context(), p)
 				pokemons = append(pokemons, poke)
 			}
 			teamResponse["pokemons"] = pokemons
 		}
 
-		coveredTypes, uncoveredTypes, err := application.TeamBuilder.CalculateTypeCoverage(p.Pokemons)
+		coveredTypes, uncoveredTypes, err := application.TeamBuilder.CalculateTypeCoverage(r.Context(), p.Pokemons)
 		if err != nil {
 			return err
 		}

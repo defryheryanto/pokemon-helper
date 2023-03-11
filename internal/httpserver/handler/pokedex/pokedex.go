@@ -25,7 +25,7 @@ func GetAllPokedex(application *app.App) http.HandlerFunc {
 func GetPokedex(application *app.App) http.HandlerFunc {
 	return handler.Handle(func(w http.ResponseWriter, r *http.Request) error {
 		pokemoNname := mux.Vars(r)["pokemonName"]
-		data := application.Pokedex.GetPokedex(pokemoNname)
+		data := application.Pokedex.GetPokedex(r.Context(), pokemoNname)
 		if data == nil {
 			return errors.NewNotFoundError("Pokemon not found")
 		}

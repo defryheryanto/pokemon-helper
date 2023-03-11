@@ -1,6 +1,7 @@
 package pokedex_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -47,7 +48,7 @@ func TestGetPokemonData(test *testing.T) {
 	}
 
 	service := pokedex.NewService()
-	pokemonData := service.GetPokedex(pokemonName)
+	pokemonData := service.GetPokedex(context.TODO(), pokemonName)
 	if !pokemonDataEqual(expectedData, pokemonData) {
 		test.Fatalf(fmt.Sprintf("Actual pokemon data and expected data not equal: %v != %v", pokemonData, expectedData))
 	}

@@ -1,6 +1,7 @@
 package teambuilder
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/defry256/pokemon-helper/internal/errors"
@@ -16,10 +17,10 @@ func NewService(pokedexService pokedex.IService) *Service {
 	return &Service{pokedexService}
 }
 
-func (s *Service) CalculateTypeCoverage(pokemonNames []string) (typeCovered, typeUncovered []pokemontype.IType, err error) {
+func (s *Service) CalculateTypeCoverage(ctx context.Context, pokemonNames []string) (typeCovered, typeUncovered []pokemontype.IType, err error) {
 	typeCovered = []pokemontype.IType{}
 	for _, pokemonName := range pokemonNames {
-		pokemonData := s.pokedex.GetPokedex(pokemonName)
+		pokemonData := s.pokedex.GetPokedex(ctx, pokemonName)
 		if pokemonData == nil {
 			return nil, nil, errors.NewNotFoundError(fmt.Sprintf("Pokemon %s not found", pokemonName))
 		}

@@ -1,6 +1,7 @@
 package pokedex
 
 import (
+	"context"
 	"strconv"
 	"strings"
 
@@ -91,7 +92,7 @@ func (s *Service) GetAllPokedex(search string) []*pokemon.PokemonData {
 	return pokemons
 }
 
-func (s *Service) GetPokedex(pokemonName string) *pokemon.PokemonData {
+func (s *Service) GetPokedex(ctx context.Context, pokemonName string) *pokemon.PokemonData {
 	var data *pokemon.PokemonData
 
 	s.c.OnHTML("#main", func(h *colly.HTMLElement) {

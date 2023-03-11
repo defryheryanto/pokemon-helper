@@ -1,6 +1,7 @@
 package teambuilder_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -62,7 +63,7 @@ func TestTypeCoverage(test *testing.T) {
 	}
 
 	service := setupService()
-	coveredTypes, uncoveredTypes, err := service.CalculateTypeCoverage(pokemonNames)
+	coveredTypes, uncoveredTypes, err := service.CalculateTypeCoverage(context.TODO(), pokemonNames)
 	if err != nil {
 		test.Fatal(err)
 	}

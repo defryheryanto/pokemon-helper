@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,6 +13,7 @@ import (
 	"github.com/defry256/pokemon-helper/config/env"
 	"github.com/defry256/pokemon-helper/internal/httpserver"
 	"github.com/defry256/pokemon-helper/internal/logger"
+	queue "github.com/defryheryanto/job-queuer"
 )
 
 func main() {
@@ -20,9 +22,14 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 
+	queuer := queue.NewQueuer(config.MAX_QUEUE_WORKER())
+	queuer.Run(context.Background())
+	log.Println("queuer successfully running")
+
 	var appserver *http.Server
 	go func() {
-		app := BuildApp()
+		redisClient := setupRedis()
+		app := BuildApp(redisClient, queuer)
 		appserver = &http.Server{
 			Addr:    fmt.Sprintf("%s:%s", config.HOST_URL(), config.HOST_PORT()),
 			Handler: httpserver.HandleRoutes(app),

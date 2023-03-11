@@ -10,19 +10,18 @@ import (
 	"time"
 
 	"github.com/defry256/pokemon-helper/config"
-	"github.com/defry256/pokemon-helper/config/env"
 	"github.com/defry256/pokemon-helper/internal/httpserver"
 	"github.com/defry256/pokemon-helper/internal/logger"
 	queue "github.com/defryheryanto/job-queuer"
 )
 
 func main() {
-	env.LoadEnv()
+	config.Load()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 
-	queuer := queue.NewQueuer(config.MAX_QUEUE_WORKER())
+	queuer := queue.NewQueuer(config.MaxQueueWorker())
 	queuer.Run(context.Background())
 	log.Println("queuer successfully running")
 
@@ -31,7 +30,7 @@ func main() {
 		redisClient := setupRedis()
 		app := BuildApp(redisClient, queuer)
 		appserver = &http.Server{
-			Addr:    fmt.Sprintf("%s:%s", config.HOST_URL(), config.HOST_PORT()),
+			Addr:    fmt.Sprintf(":%s", config.HostPort()),
 			Handler: httpserver.HandleRoutes(app),
 		}
 		logger.Print(fmt.Sprintf("Application Server listening on %s", appserver.Addr))

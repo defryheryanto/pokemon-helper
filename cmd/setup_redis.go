@@ -9,9 +9,9 @@ import (
 
 func setupRedis() *redis.Client {
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", config.REDIS_HOST(), config.REDIS_PORT()),
-		Username: config.REDIS_USERNAME(),
-		Password: config.REDIS_PASSWORD(),
+		Addr:     fmt.Sprintf("%s:%s", config.RedisHost(), config.RedisPort()),
+		Username: config.RedisUsername(),
+		Password: config.RedisPassword(),
 	})
 
 	return redisClient

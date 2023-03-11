@@ -1,45 +1,77 @@
 package config
 
-type config interface {
-	HOST_URL() string
-	HOST_PORT() string
-	MAX_QUEUE_WORKER() int
-	REDIS_HOST() string
-	REDIS_PORT() string
-	REDIS_USERNAME() string
-	REDIS_PASSWORD() string
-}
+import (
+	"github.com/spf13/viper"
+)
 
 var c config
 
-func SetConfig(cfg config) {
-	c = cfg
+type config struct {
+	HostPort       string `mapstructure:"HOST_PORT"`
+	MaxQueueWorker int    `mapstructure:"MAX_QUEUE_WORKER"`
+	RedisHost      string `mapstructure:"REDIS_HOST"`
+	RedisPort      string `mapstructure:"REDIS_PORT"`
+	RedisUsername  string `mapstructure:"REDIS_USERNAME"`
+	RedisPassword  string `mapstructure:"REDIS_PASSWORD"`
 }
 
-func HOST_URL() string {
-	return c.HOST_URL()
+func (cfg *config) ValidateKeys() {
+	if cfg.HostPort == "" {
+		panic("ENV HOST_PORT is empty")
+	}
+	if cfg.MaxQueueWorker == 0 {
+		panic("ENV MAX_QUEUE_WORKER is 0")
+	}
+	if cfg.RedisHost == "" {
+		panic("ENV REDIS_HOST is empty")
+	}
+	if cfg.RedisPort == "" {
+		panic("ENV REDIS_PORT is empty")
+	}
+	if cfg.RedisUsername == "" {
+		panic("ENV REDIS_USERNAME is empty")
+	}
+	if cfg.RedisPassword == "" {
+		panic("ENV REDIS_PASSWORD is empty")
+	}
 }
 
-func HOST_PORT() string {
-	return c.HOST_PORT()
+func Load() {
+	viper.BindEnv("HOST_PORT")
+	viper.BindEnv("MAX_QUEUE_WORKER")
+	viper.BindEnv("REDIS_HOST")
+	viper.BindEnv("REDIS_PORT")
+	viper.BindEnv("REDIS_USERNAME")
+	viper.BindEnv("REDIS_PASSWORD")
+
+	err := viper.Unmarshal(&c)
+	if err != nil {
+		panic(err)
+	}
+
+	c.ValidateKeys()
 }
 
-func MAX_QUEUE_WORKER() int {
-	return c.MAX_QUEUE_WORKER()
+func HostPort() string {
+	return c.HostPort
 }
 
-func REDIS_HOST() string {
-	return c.REDIS_HOST()
+func MaxQueueWorker() int {
+	return c.MaxQueueWorker
 }
 
-func REDIS_PORT() string {
-	return c.REDIS_PORT()
+func RedisHost() string {
+	return c.RedisHost
 }
 
-func REDIS_USERNAME() string {
-	return c.REDIS_USERNAME()
+func RedisPort() string {
+	return c.RedisPort
 }
 
-func REDIS_PASSWORD() string {
-	return c.REDIS_PASSWORD()
+func RedisUsername() string {
+	return c.RedisUsername
+}
+
+func RedisPassword() string {
+	return c.RedisPassword
 }

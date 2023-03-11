@@ -29,10 +29,19 @@ func NewRedisDecorator(
 	return &RedisDecorator{baseService, redisClient, queuer}
 }
 
+func (s *RedisDecorator) GetAllPokedex(search string) []*pokemon.PokemonData {
+	pokemonData := s.IService.GetAllPokedex(search)
+
+	s.queuer.Push(newPokemonRedisRegistrar(
+		pokemonData,
+		s.redisClient,
+	))
+	return pokemonData
+}
+
 func (s *RedisDecorator) GetPokedex(ctx context.Context, pokemonName string) *pokemon.PokemonData {
 	pokemonData, err := s.getPokemonFromRedis(ctx, pokemonName)
 	if err == nil && pokemonData != nil {
-		fmt.Println("got from redis")
 		return pokemonData
 	}
 
@@ -49,7 +58,6 @@ func (s *RedisDecorator) getPokemonFromRedis(ctx context.Context, pokemonName st
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("get with %s\n", getRedisKey(pokemonName))
 
 	var pokemonMap map[string]interface{}
 	err = json.Unmarshal(pokedexByte, &pokemonMap)

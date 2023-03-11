@@ -3,7 +3,6 @@ package redis
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/defry256/pokemon-helper/internal/pokemon"
 	"github.com/go-redis/redis/v8"
@@ -46,6 +45,5 @@ func (r *pokemonRedisRegistrar) setPokemon(ctx context.Context, pokemonData *pok
 	}
 
 	r.redisClient.Set(ctx, getRedisKey(pokemonData.Name), b, redisExpiryTime())
-	fmt.Printf("set with %s\n", getRedisKey(pokemonData.Name))
 	return nil
 }

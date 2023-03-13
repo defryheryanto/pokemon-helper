@@ -13,6 +13,7 @@ import (
 	"github.com/defry256/pokemon-helper/internal/httpserver"
 	"github.com/defry256/pokemon-helper/internal/logger"
 	queue "github.com/defryheryanto/job-queuer"
+	otel "go.opentelemetry.io/otel"
 )
 
 func main() {
@@ -25,13 +26,17 @@ func main() {
 	queuer.Run(context.Background())
 	log.Println("queuer successfully running")
 
+	tracerProvider := setupTracer()
+	otel.SetTracerProvider(tracerProvider)
+	tracer := tracerProvider.Tracer("pokemon-helper")
+
 	var appserver *http.Server
 	go func() {
 		redisClient := setupRedis()
 		app := BuildApp(redisClient, queuer)
 		appserver = &http.Server{
 			Addr:    fmt.Sprintf(":%s", config.HostPort()),
-			Handler: httpserver.HandleRoutes(app),
+			Handler: httpserver.HandleRoutes(app, tracer),
 		}
 		logger.Print(fmt.Sprintf("Application Server listening on %s", appserver.Addr))
 		err := appserver.ListenAndServe()

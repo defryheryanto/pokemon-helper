@@ -7,12 +7,14 @@ import (
 var c config
 
 type config struct {
-	HostPort       string `mapstructure:"HOST_PORT"`
-	MaxQueueWorker int    `mapstructure:"MAX_QUEUE_WORKER"`
-	RedisHost      string `mapstructure:"REDIS_HOST"`
-	RedisPort      string `mapstructure:"REDIS_PORT"`
-	RedisUsername  string `mapstructure:"REDIS_USERNAME"`
-	RedisPassword  string `mapstructure:"REDIS_PASSWORD"`
+	HostPort           string `mapstructure:"HOST_PORT"`
+	MaxQueueWorker     int    `mapstructure:"MAX_QUEUE_WORKER"`
+	RedisHost          string `mapstructure:"REDIS_HOST"`
+	RedisPort          string `mapstructure:"REDIS_PORT"`
+	RedisUsername      string `mapstructure:"REDIS_USERNAME"`
+	RedisPassword      string `mapstructure:"REDIS_PASSWORD"`
+	JaegerCollectorURL string `mapstructure:"JAEGER_COLLECTOR_URL"`
+	Environment        string `mapstructure:"ENVIRONMENT"`
 }
 
 func (cfg *config) ValidateKeys() {
@@ -34,6 +36,12 @@ func (cfg *config) ValidateKeys() {
 	if cfg.RedisPassword == "" {
 		panic("ENV REDIS_PASSWORD is empty")
 	}
+	if cfg.JaegerCollectorURL == "" {
+		panic("ENV JAEGER_COLLECTOR_URL is empty")
+	}
+	if cfg.Environment == "" {
+		panic("ENV ENVIRONMENT is empty")
+	}
 }
 
 func Load() {
@@ -43,6 +51,8 @@ func Load() {
 	viper.BindEnv("REDIS_PORT")
 	viper.BindEnv("REDIS_USERNAME")
 	viper.BindEnv("REDIS_PASSWORD")
+	viper.BindEnv("JAEGER_COLLECTOR_URL")
+	viper.BindEnv("ENVIRONMENT")
 
 	err := viper.Unmarshal(&c)
 	if err != nil {
@@ -74,4 +84,12 @@ func RedisUsername() string {
 
 func RedisPassword() string {
 	return c.RedisPassword
+}
+
+func JaegerCollectorURL() string {
+	return c.JaegerCollectorURL
+}
+
+func Environment() string {
+	return c.Environment
 }

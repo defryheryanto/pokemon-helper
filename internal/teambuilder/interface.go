@@ -8,5 +8,5 @@ import (
 
 type IService interface {
 	CalculateTypeCoverage(ctx context.Context, pokemonNames []string) (coveredTypes, uncoveredTypes []pokemontype.IType, err error)
-	CalculateSuggestedType(uncoveredTypes []pokemontype.IType, suggestLength int) []pokemontype.IType
+	CalculateSuggestedType(ctx context.Context, uncoveredTypes []pokemontype.IType, suggestLength int) []pokemontype.IType
 }

@@ -53,7 +53,7 @@ func SimulateTeam(application *app.App) http.HandlerFunc {
 
 		if p.WithTypeSuggestion {
 			suggestionCount := (MAX_TEAM_NUMBER - len(p.Pokemons)) * 2
-			suggestionTypes := application.TeamBuilder.CalculateSuggestedType(uncoveredTypes, suggestionCount)
+			suggestionTypes := application.TeamBuilder.CalculateSuggestedType(r.Context(), uncoveredTypes, suggestionCount)
 			teamResponse["suggestion_types"] = suggestionTypes
 		}
 
@@ -85,7 +85,7 @@ func GetTypesSuggestion(application *app.App) http.HandlerFunc {
 			suggestionLength = p.SuggestionLength
 		}
 
-		suggestionTypes := application.TeamBuilder.CalculateSuggestedType(uncoveredTypes, suggestionLength)
+		suggestionTypes := application.TeamBuilder.CalculateSuggestedType(r.Context(), uncoveredTypes, suggestionLength)
 
 		response.WithData(w, http.StatusOK, map[string]interface{}{
 			"suggestion_types": suggestionTypes,

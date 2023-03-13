@@ -34,7 +34,7 @@ func (s *Service) CalculateTypeCoverage(ctx context.Context, pokemonNames []stri
 	return typeCovered, typeUncovered, err
 }
 
-func (s *Service) CalculateSuggestedType(uncoveredTypes []pokemontype.IType, suggestLength int) []pokemontype.IType {
+func (s *Service) CalculateSuggestedType(ctx context.Context, uncoveredTypes []pokemontype.IType, suggestLength int) []pokemontype.IType {
 	suggestedTypeScore := map[pokemontype.IType]int{}
 
 	for key := range getTypesMap() {

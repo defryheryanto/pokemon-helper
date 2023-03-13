@@ -97,7 +97,7 @@ func TestSuggestedTypes(test *testing.T) {
 	}
 
 	service := setupService()
-	suggestedTypes := service.CalculateSuggestedType(uncoveredTypes, 3)
+	suggestedTypes := service.CalculateSuggestedType(context.Background(), uncoveredTypes, 3)
 	err := equalTypes(suggestedTypes, expectedSuggestedTypes, "suggestedTypes")
 	if err != nil {
 		test.Fatal(err)

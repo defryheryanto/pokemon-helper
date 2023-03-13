@@ -33,7 +33,7 @@ func main() {
 	var appserver *http.Server
 	go func() {
 		redisClient := setupRedis()
-		app := BuildApp(redisClient, queuer)
+		app := BuildApp(redisClient, queuer, tracer)
 		appserver = &http.Server{
 			Addr:    fmt.Sprintf(":%s", config.HostPort()),
 			Handler: httpserver.HandleRoutes(app, tracer),

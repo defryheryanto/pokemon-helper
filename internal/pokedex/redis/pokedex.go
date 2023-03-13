@@ -29,8 +29,8 @@ func NewRedisDecorator(
 	return &RedisDecorator{baseService, redisClient, queuer}
 }
 
-func (s *RedisDecorator) GetAllPokedex(search string) []*pokemon.PokemonData {
-	pokemonData := s.IService.GetAllPokedex(search)
+func (s *RedisDecorator) GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData {
+	pokemonData := s.IService.GetAllPokedex(ctx, search)
 
 	s.queuer.Push(newPokemonRedisRegistrar(
 		pokemonData,

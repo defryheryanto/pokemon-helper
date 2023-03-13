@@ -7,6 +7,6 @@ import (
 )
 
 type IService interface {
-	GetAllPokedex(search string) []*pokemon.PokemonData
+	GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData
 	GetPokedex(ctx context.Context, pokemonName string) *pokemon.PokemonData
 }

@@ -44,7 +44,7 @@ func NewService(options ...Option) *Service {
 	return scraper
 }
 
-func (s *Service) GetAllPokedex(search string) []*pokemon.PokemonData {
+func (s *Service) GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData {
 	pokemons := []*pokemon.PokemonData{}
 
 	s.c.OnHTML("table[id=pokedex]", func(h *colly.HTMLElement) {

@@ -12,7 +12,7 @@ import (
 
 func TestGetAllPokemonData(test *testing.T) {
 	service := pokedex.NewService()
-	pokemons := service.GetAllPokedex("")
+	pokemons := service.GetAllPokedex(context.Background(), "")
 	for _, poke := range pokemons {
 		if poke.Name == "" {
 			test.Fatalf("Pokemon name is empty")
@@ -22,7 +22,7 @@ func TestGetAllPokemonData(test *testing.T) {
 
 func TestSearchPokedex(test *testing.T) {
 	service := pokedex.NewService()
-	pokemons := service.GetAllPokedex("bulba")
+	pokemons := service.GetAllPokedex(context.Background(), "bulba")
 	if pokemons[0].Name != "Bulbasaur" {
 		test.Fatalf(fmt.Sprintf("Pokemon Name Expected: Bulbasaur, Got: %s", pokemons[0].Name))
 	}

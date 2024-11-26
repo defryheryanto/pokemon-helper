@@ -105,12 +105,16 @@ func (s *Service) GetPokedex(ctx context.Context, pokemonName string) *pokemon.P
 				s.Find("tr").Each(func(i int, s2 *goquery.Selection) {
 					if s2.ChildrenFiltered("th").Text() == "Type" && data.Types == nil {
 						types := []pokemontype.IType{}
-						for _, pokemonType := range strings.Split(s2.ChildrenFiltered("td").First().Text(), " ") {
-							newType := pokemontype.Type(strings.ReplaceAll(pokemonType, "\n", ""))
-							if newType != "" {
-								types = append(types, newType)
-							}
-						}
+						s2.ChildrenFiltered("td").ChildrenFiltered("a").Each(func(j int, s3 *goquery.Selection) {
+							types = append(types, pokemontype.Type(s3.Text()))
+						})
+						// s2.ChildrenFiltered("a").Each(func(i int, s *goquery.Selection) {})
+						// for _, pokemonType := range strings.Split(s2.ChildrenFiltered("td").First().Text(), " ") {
+						// 	newType := pokemontype.Type(strings.ReplaceAll(pokemonType, "\n", ""))
+						// 	if newType != "" {
+						// 		types = append(types, newType)
+						// 	}
+						// }
 						data.Types = types
 					}
 				})

@@ -29,7 +29,7 @@ func Print(message string) {
 }
 
 func logMessage(message string) {
-	filePath, _ := filepath.Abs(fmt.Sprintf("../logs/pokemon-helper_%s.log", time.Now().Format("2006-01-02")))
+	filePath, _ := filepath.Abs(fmt.Sprintf("./logs/pokemon-helper_%s.log", time.Now().Format("2006-01-02")))
 	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf(err.Error())

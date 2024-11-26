@@ -9,6 +9,7 @@ func setupRedis() *redis.Client {
 	redisClient := redis.NewClient(&redis.Options{
 		Network:  config.RedisNetwork(),
 		Addr:     config.RedisAddress(),
+		DB:       config.RedisDB(),
 		Username: config.RedisUsername(),
 		Password: config.RedisPassword(),
 	})

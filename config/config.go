@@ -11,6 +11,7 @@ type config struct {
 	MaxQueueWorker     int    `mapstructure:"MAX_QUEUE_WORKER"`
 	RedisNetwork       string `mapstructure:"REDIS_NETWORK"`
 	RedisAddress       string `mapstructure:"REDIS_ADDRESS"`
+	RedisDB            int    `mapstructure:"REDIS_DB"`
 	RedisUsername      string `mapstructure:"REDIS_USERNAME"`
 	RedisPassword      string `mapstructure:"REDIS_PASSWORD"`
 	TracingEnabled     bool   `mapstructure:"TRACING_ENABLED"`
@@ -50,6 +51,7 @@ func Load() {
 	viper.BindEnv("MAX_QUEUE_WORKER")
 	viper.BindEnv("REDIS_NETWORK")
 	viper.BindEnv("REDIS_ADDRESS")
+	viper.BindEnv("REDIS_DB")
 	viper.BindEnv("REDIS_USERNAME")
 	viper.BindEnv("REDIS_PASSWORD")
 	viper.BindEnv("TRACING_ENABLED")
@@ -78,6 +80,10 @@ func RedisNetwork() string {
 
 func RedisAddress() string {
 	return c.RedisAddress
+}
+
+func RedisDB() int {
+	return c.RedisDB
 }
 
 func RedisUsername() string {

@@ -9,8 +9,8 @@ var c config
 type config struct {
 	HostPort           string `mapstructure:"HOST_PORT"`
 	MaxQueueWorker     int    `mapstructure:"MAX_QUEUE_WORKER"`
-	RedisHost          string `mapstructure:"REDIS_HOST"`
-	RedisPort          string `mapstructure:"REDIS_PORT"`
+	RedisNetwork       string `mapstructure:"REDIS_NETWORK"`
+	RedisAddress       string `mapstructure:"REDIS_ADDRESS"`
 	RedisUsername      string `mapstructure:"REDIS_USERNAME"`
 	RedisPassword      string `mapstructure:"REDIS_PASSWORD"`
 	TracingEnabled     bool   `mapstructure:"TRACING_ENABLED"`
@@ -25,11 +25,11 @@ func (cfg *config) ValidateKeys() {
 	if cfg.MaxQueueWorker == 0 {
 		panic("ENV MAX_QUEUE_WORKER is 0")
 	}
-	if cfg.RedisHost == "" {
-		panic("ENV REDIS_HOST is empty")
+	if cfg.RedisNetwork == "" {
+		panic("ENV REDIS_NETWORK is empty")
 	}
-	if cfg.RedisPort == "" {
-		panic("ENV REDIS_PORT is empty")
+	if cfg.RedisAddress == "" {
+		panic("ENV REDIS_ADDRESS is empty")
 	}
 	if cfg.RedisUsername == "" {
 		panic("ENV REDIS_USERNAME is empty")
@@ -48,8 +48,8 @@ func (cfg *config) ValidateKeys() {
 func Load() {
 	viper.BindEnv("HOST_PORT")
 	viper.BindEnv("MAX_QUEUE_WORKER")
-	viper.BindEnv("REDIS_HOST")
-	viper.BindEnv("REDIS_PORT")
+	viper.BindEnv("REDIS_NETWORK")
+	viper.BindEnv("REDIS_ADDRESS")
 	viper.BindEnv("REDIS_USERNAME")
 	viper.BindEnv("REDIS_PASSWORD")
 	viper.BindEnv("TRACING_ENABLED")
@@ -72,12 +72,12 @@ func MaxQueueWorker() int {
 	return c.MaxQueueWorker
 }
 
-func RedisHost() string {
-	return c.RedisHost
+func RedisNetwork() string {
+	return c.RedisNetwork
 }
 
-func RedisPort() string {
-	return c.RedisPort
+func RedisAddress() string {
+	return c.RedisAddress
 }
 
 func RedisUsername() string {

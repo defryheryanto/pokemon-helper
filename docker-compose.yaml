@@ -1,0 +1,8 @@
+services:
+  redis:
+    image: "redis:alpine3.13"
+    command: >
+      --requirepass redis
+    restart: always
+    ports:
+      - 6381:6379

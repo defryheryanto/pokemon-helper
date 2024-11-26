@@ -26,9 +26,12 @@ func main() {
 	queuer.Run(context.Background())
 	log.Println("queuer successfully running")
 
-	tracerProvider := setupTracer()
-	otel.SetTracerProvider(tracerProvider)
-	tracer := tracerProvider.Tracer("pokemon-helper")
+	tracer := otel.GetTracerProvider().Tracer("")
+	if config.TracingEnabled() {
+		tracerProvider := setupTracer()
+		otel.SetTracerProvider(tracerProvider)
+		tracer = tracerProvider.Tracer("pokemon-helper")
+	}
 
 	var appserver *http.Server
 	go func() {

@@ -13,6 +13,7 @@ type config struct {
 	RedisPort          string `mapstructure:"REDIS_PORT"`
 	RedisUsername      string `mapstructure:"REDIS_USERNAME"`
 	RedisPassword      string `mapstructure:"REDIS_PASSWORD"`
+	TracingEnabled     bool   `mapstructure:"TRACING_ENABLED"`
 	JaegerCollectorURL string `mapstructure:"JAEGER_COLLECTOR_URL"`
 	Environment        string `mapstructure:"ENVIRONMENT"`
 }
@@ -51,6 +52,7 @@ func Load() {
 	viper.BindEnv("REDIS_PORT")
 	viper.BindEnv("REDIS_USERNAME")
 	viper.BindEnv("REDIS_PASSWORD")
+	viper.BindEnv("TRACING_ENABLED")
 	viper.BindEnv("JAEGER_COLLECTOR_URL")
 	viper.BindEnv("ENVIRONMENT")
 
@@ -84,6 +86,10 @@ func RedisUsername() string {
 
 func RedisPassword() string {
 	return c.RedisPassword
+}
+
+func TracingEnabled() bool {
+	return c.TracingEnabled
 }
 
 func JaegerCollectorURL() string {

@@ -32,15 +32,6 @@ func (cfg *config) ValidateKeys() {
 	if cfg.RedisAddress == "" {
 		panic("ENV REDIS_ADDRESS is empty")
 	}
-	if cfg.RedisUsername == "" {
-		panic("ENV REDIS_USERNAME is empty")
-	}
-	if cfg.RedisPassword == "" {
-		panic("ENV REDIS_PASSWORD is empty")
-	}
-	if cfg.JaegerCollectorURL == "" {
-		panic("ENV JAEGER_COLLECTOR_URL is empty")
-	}
 	if cfg.Environment == "" {
 		panic("ENV ENVIRONMENT is empty")
 	}

@@ -23,7 +23,7 @@ func HandleRoutes(a *app.App, tr trace.Tracer) http.Handler {
 
 	root.HandleFunc("/api/v1/pokemons", pokedex.GetAllPokedex(a)).Methods(http.MethodGet)
 	root.HandleFunc("/api/v1/pokemons/{pokemonName}", pokedex.GetPokedex(a)).Methods(http.MethodGet)
-	root.HandleFunc("/api/v1/simulate-team", teambuilder.SimulateTeam(a)).Methods(http.MethodGet)
+	root.HandleFunc("/api/v1/simulate-team", teambuilder.SimulateTeam(a)).Methods(http.MethodPost)
 	root.HandleFunc("/api/v1/type/suggestion", teambuilder.GetTypesSuggestion(a)).Methods(http.MethodGet)
 
 	return http.TimeoutHandler(root, 30*time.Second, "Request Timeout")

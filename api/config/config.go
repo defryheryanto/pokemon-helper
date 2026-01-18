@@ -8,6 +8,7 @@ var c config
 
 type config struct {
 	HostPort           string `mapstructure:"HOST_PORT"`
+	LoggerFilepath     string `mapstructure:"LOGGER_FILEPATH"`
 	MaxQueueWorker     int    `mapstructure:"MAX_QUEUE_WORKER"`
 	RedisNetwork       string `mapstructure:"REDIS_NETWORK"`
 	RedisAddress       string `mapstructure:"REDIS_ADDRESS"`
@@ -22,6 +23,9 @@ type config struct {
 func (cfg *config) ValidateKeys() {
 	if cfg.HostPort == "" {
 		panic("ENV HOST_PORT is empty")
+	}
+	if cfg.LoggerFilepath == "" {
+		panic("ENV LOGGER_FILEPATH is empty")
 	}
 	if cfg.MaxQueueWorker == 0 {
 		panic("ENV MAX_QUEUE_WORKER is 0")
@@ -39,6 +43,7 @@ func (cfg *config) ValidateKeys() {
 
 func Load() {
 	viper.BindEnv("HOST_PORT")
+	viper.BindEnv("LOGGER_FILEPATH")
 	viper.BindEnv("MAX_QUEUE_WORKER")
 	viper.BindEnv("REDIS_NETWORK")
 	viper.BindEnv("REDIS_ADDRESS")
@@ -59,6 +64,10 @@ func Load() {
 
 func HostPort() string {
 	return c.HostPort
+}
+
+func LoggerFilepath() string {
+	return c.LoggerFilepath
 }
 
 func MaxQueueWorker() int {

@@ -2,16 +2,15 @@ package pokedex_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
-	"github.com/defryheryanto/pokemon-helper/internal/pokedex/v1"
+	pokedex "github.com/defryheryanto/pokemon-helper/internal/pokedex/crawler"
 	"github.com/defryheryanto/pokemon-helper/internal/pokemon"
 	"github.com/defryheryanto/pokemon-helper/internal/pokemontype"
 )
 
 func TestGetAllPokemonData(test *testing.T) {
-	service := pokedex.NewService()
+	service := pokedex.NewCrawler()
 	pokemons := service.GetAllPokedex(context.Background(), "")
 	for _, poke := range pokemons {
 		if poke.Name == "" {
@@ -21,10 +20,10 @@ func TestGetAllPokemonData(test *testing.T) {
 }
 
 func TestSearchPokedex(test *testing.T) {
-	service := pokedex.NewService()
+	service := pokedex.NewCrawler()
 	pokemons := service.GetAllPokedex(context.Background(), "bulba")
 	if pokemons[0].Name != "Bulbasaur" {
-		test.Fatalf(fmt.Sprintf("Pokemon Name Expected: Bulbasaur, Got: %s", pokemons[0].Name))
+		test.Fatalf("Pokemon Name Expected: Bulbasaur, Got: %s", pokemons[0].Name)
 	}
 }
 
@@ -47,10 +46,10 @@ func TestGetPokemonData(test *testing.T) {
 		},
 	}
 
-	service := pokedex.NewService()
+	service := pokedex.NewCrawler()
 	pokemonData := service.GetPokedex(context.TODO(), pokemonName)
 	if !pokemonDataEqual(expectedData, pokemonData) {
-		test.Fatalf(fmt.Sprintf("Actual pokemon data and expected data not equal: %v != %v", pokemonData, expectedData))
+		test.Fatalf("Actual pokemon data and expected data not equal: %v != %v", pokemonData, expectedData)
 	}
 }
 

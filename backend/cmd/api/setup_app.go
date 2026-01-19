@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/defryheryanto/pokemon-helper/internal/app"
 	"github.com/defryheryanto/pokemon-helper/internal/pokedex"
+	pokedex_crawler "github.com/defryheryanto/pokemon-helper/internal/pokedex/crawler"
 	pokedex_redis "github.com/defryheryanto/pokemon-helper/internal/pokedex/redis"
 	"github.com/defryheryanto/pokemon-helper/internal/pokedex/traced"
-	pokedex_service "github.com/defryheryanto/pokemon-helper/internal/pokedex/v1"
 	"github.com/defryheryanto/pokemon-helper/internal/teambuilder"
 	teambuilder_traced "github.com/defryheryanto/pokemon-helper/internal/teambuilder/traced"
 	teambuilder_service "github.com/defryheryanto/pokemon-helper/internal/teambuilder/v1"
@@ -25,7 +25,7 @@ func BuildApp(redisClient *redis.Client, tracer trace.Tracer) *app.App {
 
 func setupPokedex(redisClient *redis.Client, tracer trace.Tracer) pokedex.IService {
 	var pokedexService pokedex.IService
-	pokedexService = pokedex_service.NewService()
+	pokedexService = pokedex_crawler.NewCrawler()
 	pokedexService = pokedex_redis.NewRedisDecorator(pokedexService, redisClient)
 	pokedexService = traced.NewTracedService(pokedexService, tracer)
 

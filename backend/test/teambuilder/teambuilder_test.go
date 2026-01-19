@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/defryheryanto/pokemon-helper/internal/pokedex/v1"
+	pokedex "github.com/defryheryanto/pokemon-helper/internal/pokedex/crawler"
 	"github.com/defryheryanto/pokemon-helper/internal/pokemontype"
 	iteambuilder "github.com/defryheryanto/pokemon-helper/internal/teambuilder"
 	"github.com/defryheryanto/pokemon-helper/internal/teambuilder/v1"
 )
 
 func setupService() iteambuilder.IService {
-	pokedex := pokedex.NewService()
+	pokedex := pokedex.NewCrawler()
 	service := teambuilder.NewService(pokedex)
 	return service
 }

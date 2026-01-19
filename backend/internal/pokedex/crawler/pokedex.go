@@ -15,13 +15,13 @@ const (
 	POKEDEX_SOURCE = "https://pokemondb.net/pokedex/"
 )
 
-type Service struct {
+type Crawler struct {
 	c *colly.Collector
 }
-type Option func(*Service)
+type Option func(*Crawler)
 
 func CollyCollectorOption(c *colly.Collector) Option {
-	return func(ps *Service) {
+	return func(ps *Crawler) {
 		ps.c = c
 	}
 }
@@ -33,8 +33,8 @@ func defaultCollector() *colly.Collector {
 	)
 }
 
-func NewService(options ...Option) *Service {
-	scraper := &Service{}
+func NewCrawler(options ...Option) *Crawler {
+	scraper := &Crawler{}
 	scraper.c = defaultCollector()
 
 	for _, option := range options {
@@ -44,7 +44,7 @@ func NewService(options ...Option) *Service {
 	return scraper
 }
 
-func (s *Service) GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData {
+func (s *Crawler) GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData {
 	pokemons := []*pokemon.PokemonData{}
 
 	s.c.OnHTML("table[id=pokedex]", func(h *colly.HTMLElement) {
@@ -92,7 +92,7 @@ func (s *Service) GetAllPokedex(ctx context.Context, search string) []*pokemon.P
 	return pokemons
 }
 
-func (s *Service) GetPokedex(ctx context.Context, pokemonName string) *pokemon.PokemonData {
+func (s *Crawler) GetPokedex(ctx context.Context, pokemonName string) *pokemon.PokemonData {
 	var data *pokemon.PokemonData
 
 	s.c.OnHTML("#main", func(h *colly.HTMLElement) {

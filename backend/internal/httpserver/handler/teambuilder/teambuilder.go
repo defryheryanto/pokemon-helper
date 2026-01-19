@@ -38,7 +38,11 @@ func SimulateTeam(application *app.App) http.HandlerFunc {
 		if p.WithPokemonData {
 			pokemons := []*pokemon.PokemonData{}
 			for _, p := range p.Pokemons {
-				poke := application.Pokedex.GetPokedex(r.Context(), p)
+				poke, err := application.Pokedex.GetPokedex(r.Context(), p)
+				if err != nil {
+					return err
+				}
+
 				pokemons = append(pokemons, poke)
 			}
 			teamResponse["pokemons"] = pokemons

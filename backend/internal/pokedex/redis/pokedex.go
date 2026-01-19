@@ -27,28 +27,20 @@ func NewRedisDecorator(
 	return &RedisDecorator{baseService, redisClient}
 }
 
-func (s *RedisDecorator) GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData {
-	pokemonData := s.IService.GetAllPokedex(ctx, search)
-
-	go func() {
-		for _, pokemon := range pokemonData {
-			err := s.setPokemonToRedis(context.Background(), pokemon)
-			if err != nil {
-				logger.Error("error setting pokemon to redis", err)
-				continue
-			}
-		}
-	}()
-	return pokemonData
+func (s *RedisDecorator) GetAllPokedex(ctx context.Context, filter pokedex.GetAllPokedexFilter) ([]pokemon.PokemonData, error) {
+	return s.IService.GetAllPokedex(ctx, filter)
 }
 
-func (s *RedisDecorator) GetPokedex(ctx context.Context, pokemonName string) *pokemon.PokemonData {
+func (s *RedisDecorator) GetPokedex(ctx context.Context, pokemonName string) (*pokemon.PokemonData, error) {
 	pokemonData, err := s.getPokemonFromRedis(ctx, pokemonName)
 	if err == nil && pokemonData != nil {
-		return pokemonData
+		return pokemonData, nil
 	}
 
-	pokemonData = s.IService.GetPokedex(ctx, pokemonName)
+	pokemonData, err = s.IService.GetPokedex(ctx, pokemonName)
+	if err != nil {
+		return nil, err
+	}
 	go func() {
 		err := s.setPokemonToRedis(context.Background(), pokemonData)
 		if err != nil {
@@ -57,7 +49,7 @@ func (s *RedisDecorator) GetPokedex(ctx context.Context, pokemonName string) *po
 		}
 	}()
 
-	return pokemonData
+	return pokemonData, nil
 }
 
 func (s *RedisDecorator) getPokemonFromRedis(ctx context.Context, pokemonName string) (*pokemon.PokemonData, error) {

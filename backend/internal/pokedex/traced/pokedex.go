@@ -19,24 +19,25 @@ func NewTracedService(baseService pokedex.IService, tracer trace.Tracer) *Traced
 	return &TracedService{baseService, tracer}
 }
 
-func (s *TracedService) GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData {
+func (s *TracedService) GetAllPokedex(ctx context.Context, filter pokedex.GetAllPokedexFilter) ([]pokemon.PokemonData, error) {
 	ctx, span := s.tracer.Start(ctx, "service-GetPokedex")
 	defer span.End()
 
 	span.AddEvent(
 		"parameters",
 		trace.WithAttributes(
-			attribute.String("search", search),
+			attribute.Int("page", filter.Page),
+			attribute.Int("pageSize", filter.PageSize),
 		),
 	)
 
-	pokemons := s.IService.GetAllPokedex(ctx, search)
+	pokemons, err := s.IService.GetAllPokedex(ctx, filter)
 	s.logResult(span, pokemons)
 
-	return pokemons
+	return pokemons, err
 }
 
-func (s *TracedService) GetPokedex(ctx context.Context, pokemonName string) *pokemon.PokemonData {
+func (s *TracedService) GetPokedex(ctx context.Context, pokemonName string) (*pokemon.PokemonData, error) {
 	ctx, span := s.tracer.Start(ctx, "service-GetPokedex")
 	defer span.End()
 
@@ -47,10 +48,10 @@ func (s *TracedService) GetPokedex(ctx context.Context, pokemonName string) *pok
 		),
 	)
 
-	poke := s.IService.GetPokedex(ctx, pokemonName)
+	poke, err := s.IService.GetPokedex(ctx, pokemonName)
 	s.logResult(span, poke)
 
-	return poke
+	return poke, err
 }
 
 func (s *TracedService) logResult(span trace.Span, result interface{}) {

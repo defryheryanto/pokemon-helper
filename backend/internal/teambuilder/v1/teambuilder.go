@@ -20,7 +20,10 @@ func NewService(pokedexService pokedex.IService) *Service {
 func (s *Service) CalculateTypeCoverage(ctx context.Context, pokemonNames []string) (typeCovered, typeUncovered []pokemontype.IType, err error) {
 	typeCovered = []pokemontype.IType{}
 	for _, pokemonName := range pokemonNames {
-		pokemonData := s.pokedex.GetPokedex(ctx, pokemonName)
+		pokemonData, err := s.pokedex.GetPokedex(ctx, pokemonName)
+		if err != nil {
+			return nil, nil, err
+		}
 		if pokemonData == nil {
 			return nil, nil, errors.NewNotFoundError(fmt.Sprintf("Pokemon %s not found", pokemonName))
 		}

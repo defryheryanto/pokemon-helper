@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	queue "github.com/defryheryanto/job-queuer"
+	"github.com/defryheryanto/pokemon-helper/internal/logger"
 	"github.com/defryheryanto/pokemon-helper/internal/pokedex"
 	"github.com/defryheryanto/pokemon-helper/internal/pokemon"
 	"github.com/defryheryanto/pokemon-helper/internal/pokemontype"
@@ -18,24 +18,27 @@ import (
 type RedisDecorator struct {
 	pokedex.IService
 	redisClient *redis.Client
-	queuer      *queue.Queuer
 }
 
 func NewRedisDecorator(
 	baseService pokedex.IService,
 	redisClient *redis.Client,
-	queuer *queue.Queuer,
 ) *RedisDecorator {
-	return &RedisDecorator{baseService, redisClient, queuer}
+	return &RedisDecorator{baseService, redisClient}
 }
 
 func (s *RedisDecorator) GetAllPokedex(ctx context.Context, search string) []*pokemon.PokemonData {
 	pokemonData := s.IService.GetAllPokedex(ctx, search)
 
-	s.queuer.Push(newPokemonRedisRegistrar(
-		pokemonData,
-		s.redisClient,
-	))
+	go func() {
+		for _, pokemon := range pokemonData {
+			err := s.setPokemonToRedis(context.Background(), pokemon)
+			if err != nil {
+				logger.Error("error setting pokemon to redis", err)
+				continue
+			}
+		}
+	}()
 	return pokemonData
 }
 
@@ -46,10 +49,14 @@ func (s *RedisDecorator) GetPokedex(ctx context.Context, pokemonName string) *po
 	}
 
 	pokemonData = s.IService.GetPokedex(ctx, pokemonName)
-	s.queuer.Push(newPokemonRedisRegistrar(
-		[]*pokemon.PokemonData{pokemonData},
-		s.redisClient,
-	))
+	go func() {
+		err := s.setPokemonToRedis(context.Background(), pokemonData)
+		if err != nil {
+			logger.Error("error setting pokemon to redis", err)
+			return
+		}
+	}()
+
 	return pokemonData
 }
 
@@ -103,4 +110,17 @@ func (s *RedisDecorator) getPokemonFromRedis(ctx context.Context, pokemonName st
 		BaseStatus: baseStatus,
 		Types:      pokemonTypes,
 	}, nil
+}
+
+func (s *RedisDecorator) setPokemonToRedis(ctx context.Context, pokemonData *pokemon.PokemonData) error {
+	if pokemonData == nil {
+		return nil
+	}
+	b, err := json.Marshal(pokemonData)
+	if err != nil {
+		return err
+	}
+
+	s.redisClient.Set(ctx, getRedisKey(pokemonData.Name), b, redisExpiryTime())
+	return nil
 }

@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.1
-	github.com/defryheryanto/job-queuer v0.0.0-20230311124752-192134447cfa
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/gorilla/mux v1.8.0

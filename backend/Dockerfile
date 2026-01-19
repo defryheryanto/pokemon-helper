@@ -7,7 +7,7 @@ RUN mkdir /logs
 WORKDIR /app
 
 COPY . .
-copy .env .
+COPY .env .
 RUN go mod download
 
 RUN go build -o /pokemon-helper ./cmd/...

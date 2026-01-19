@@ -46,5 +46,5 @@ func (p *PokeAPI) GetPokedex(ctx context.Context, pokemonName string) (*pokemon.
 		return nil, err
 	}
 
-	return convertToPokemonData(poke), nil
+	return convertToPokemonData(poke, p.titleCaser), nil
 }

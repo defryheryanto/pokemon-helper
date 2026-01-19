@@ -4,9 +4,10 @@ import (
 	pokegomodels "github.com/JoshGuarino/PokeGo/pkg/models"
 	"github.com/defryheryanto/pokemon-helper/internal/pokemon"
 	"github.com/defryheryanto/pokemon-helper/internal/pokemontype"
+	"golang.org/x/text/cases"
 )
 
-func convertToPokemonData(poke *pokegomodels.Pokemon) *pokemon.PokemonData {
+func convertToPokemonData(poke *pokegomodels.Pokemon, nameCaser cases.Caser) *pokemon.PokemonData {
 	if poke == nil {
 		return nil
 	}
@@ -36,7 +37,7 @@ func convertToPokemonData(poke *pokegomodels.Pokemon) *pokemon.PokemonData {
 	}
 
 	return &pokemon.PokemonData{
-		Name:       poke.Name,
+		Name:       nameCaser.String(poke.Name),
 		BaseStatus: stats,
 		Types:      types,
 	}

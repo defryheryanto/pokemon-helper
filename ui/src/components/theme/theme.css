@@ -1,0 +1,59 @@
+:root {
+  --color-bg: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-disabled: #9CA3AF;
+
+  --color-brand-primary: #3B82F6;
+  --color-on-brand: #FFFFFF;
+
+  --color-semantic-success: #22C55E;
+  --color-semantic-warning: #F59E0B;
+  --color-semantic-error: #EF4444;
+  --color-semantic-info: #0EA5E9;
+
+  --color-type-fire: #F97316;
+  --color-type-water: #3B82F6;
+  --color-type-grass: #22C55E;
+  --color-type-electric: #FACC15;
+  --color-type-psychic: #EC4899;
+  --color-type-ice: #38BDF8;
+  --color-type-dragon: #6366F1;
+  --color-type-dark: #374151;
+  --color-type-fairy: #F472B6;
+  --color-on-type: #FFFFFF;
+
+  --color-surface-muted: color-mix(in srgb, var(--color-surface) 88%, var(--color-border));
+  --color-surface-hover: color-mix(in srgb, var(--color-surface) 92%, var(--color-brand-primary));
+  --color-focus-ring: color-mix(in srgb, var(--color-brand-primary) 70%, white);
+  --color-overlay: rgba(15, 23, 42, 0.45);
+
+  --color-semantic-success-bg: color-mix(in srgb, var(--color-semantic-success) 14%, var(--color-surface));
+  --color-semantic-warning-bg: color-mix(in srgb, var(--color-semantic-warning) 14%, var(--color-surface));
+  --color-semantic-error-bg: color-mix(in srgb, var(--color-semantic-error) 14%, var(--color-surface));
+  --color-semantic-info-bg: color-mix(in srgb, var(--color-semantic-info) 14%, var(--color-surface));
+
+  --color-semantic-success-border: color-mix(in srgb, var(--color-semantic-success) 35%, var(--color-border));
+  --color-semantic-warning-border: color-mix(in srgb, var(--color-semantic-warning) 35%, var(--color-border));
+  --color-semantic-error-border: color-mix(in srgb, var(--color-semantic-error) 35%, var(--color-border));
+  --color-semantic-info-border: color-mix(in srgb, var(--color-semantic-info) 35%, var(--color-border));
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 12px 24px rgba(15, 23, 42, 0.12);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  --transition-fast: 150ms ease;
+  --transition-base: 220ms ease;
+}

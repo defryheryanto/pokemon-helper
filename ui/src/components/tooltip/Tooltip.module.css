@@ -1,0 +1,38 @@
+.wrapper {
+  display: inline-flex;
+  position: relative;
+}
+
+.trigger {
+  align-items: center;
+  cursor: help;
+  display: inline-flex;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.tooltip {
+  background-color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-surface);
+  font-size: 0.75rem;
+  left: 50%;
+  opacity: 0;
+  padding: 0.35rem 0.6rem;
+  pointer-events: none;
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  transform: translateX(-50%) translateY(-4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
+  z-index: 5;
+}
+
+.wrapper:hover .tooltip,
+.wrapper:focus-within .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

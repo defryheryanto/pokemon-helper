@@ -1,0 +1,68 @@
+.wrapper {
+  align-items: center;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--space-2);
+  position: relative;
+}
+
+.input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.track {
+  background-color: var(--color-border);
+  border-radius: 999px;
+  display: inline-flex;
+  height: 22px;
+  padding: 2px;
+  position: relative;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+  width: 40px;
+}
+
+.thumb {
+  background-color: var(--color-surface);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  height: 18px;
+  transition: transform var(--transition-fast);
+  width: 18px;
+}
+
+.input:checked + .track {
+  background-color: var(--color-brand-primary);
+}
+
+.input:checked + .track .thumb {
+  transform: translateX(18px);
+}
+
+.input:focus-visible + .track {
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.wrapper:hover .track {
+  background-color: color-mix(in srgb, var(--color-brand-primary) 30%, var(--color-border));
+}
+
+.input:disabled + .track {
+  background-color: var(--color-surface-muted);
+}
+
+.input:disabled + .track .thumb {
+  background-color: var(--color-border);
+}
+
+.input:disabled ~ .label {
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.label {
+  font-size: 0.95rem;
+}

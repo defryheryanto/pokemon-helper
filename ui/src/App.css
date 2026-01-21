@@ -37,7 +37,7 @@
 
 .app {
   margin: 0 auto;
-  max-width: 1120px;
+  max-width: 80%;
   padding: clamp(24px, 4vw, 56px);
   display: grid;
   gap: clamp(28px, 5vw, 56px);

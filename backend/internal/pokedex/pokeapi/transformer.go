@@ -37,8 +37,10 @@ func convertToPokemonData(poke *pokegomodels.Pokemon, nameCaser cases.Caser) *po
 	}
 
 	return &pokemon.PokemonData{
+		ID:         poke.ID,
 		Name:       nameCaser.String(poke.Name),
 		BaseStatus: stats,
 		Types:      types,
+		Sprites:    poke.Sprites.FrontDefault,
 	}
 }

@@ -34,6 +34,10 @@ func GetAllPokedex(application *app.App) http.HandlerFunc {
 			return err
 		}
 
+		for i, pokemon := range pokemons {
+			pokemons[i].Sprites = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + strconv.Itoa(pokemon.ID) + ".png"
+		}
+
 		response.WithData(w, http.StatusOK, map[string]interface{}{
 			"pokemons": pokemons,
 		})

@@ -2,6 +2,8 @@ package pokeapi
 
 import (
 	"context"
+	"strconv"
+	"strings"
 
 	pokego "github.com/JoshGuarino/PokeGo/pkg"
 	"github.com/defryheryanto/pokemon-helper/internal/pokedex"
@@ -32,7 +34,11 @@ func (p *PokeAPI) GetAllPokedex(ctx context.Context, filter pokedex.GetAllPokede
 
 	result := make([]pokemon.PokemonData, 0, len(pokemons.Results))
 	for _, poke := range pokemons.Results {
+		splittedURL := strings.Split(poke.URL, "/")
+		id, _ := strconv.Atoi(splittedURL[len(splittedURL)-2])
+
 		result = append(result, pokemon.PokemonData{
+			ID:   id,
 			Name: p.titleCaser.String(poke.Name),
 		})
 	}

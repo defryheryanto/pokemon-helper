@@ -67,14 +67,12 @@
   gap: var(--space-2);
   font-weight: 600;
   letter-spacing: 0.02em;
+  text-decoration: none;
 }
 
-.brand-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--color-type-electric), var(--color-type-fire));
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-type-electric) 18%, transparent);
+.brand img {
+  display: block;
+  width: 150px; 
 }
 
 .nav-links {

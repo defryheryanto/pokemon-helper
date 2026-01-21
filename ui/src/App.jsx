@@ -1,4 +1,5 @@
 import './App.css'
+import iconText from './assets/icon-text.png'
 import { Button, Card, TypeBadge } from './components'
 
 function App() {
@@ -6,10 +7,9 @@ function App() {
     <div className="page">
       <div className="app">
         <nav className="topbar">
-          <div className="brand">
-            <span className="brand-dot" aria-hidden="true" />
-            PokeLab
-          </div>
+          <a className="brand" href="/">
+            <img src={iconText} alt="PokeLab" />
+          </a>
           <div className="nav-links">
             <Button variant="ghost">Pokemon</Button>
             <Button variant="ghost">Team Builder</Button>

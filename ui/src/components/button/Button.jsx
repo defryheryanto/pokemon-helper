@@ -1,15 +1,7 @@
-import styles from './Button.module.css'
-
-const buttonVariants = {
-  primary: styles.primary,
-  secondary: styles.secondary,
-  ghost: styles.ghost,
-  destructive: styles.destructive,
-}
+import { getButtonClassName } from './buttonStyles'
 
 function Button({ variant = 'primary', className = '', type = 'button', ...props }) {
-  const variantClass = buttonVariants[variant] || buttonVariants.primary
-  const classes = `${styles.button} ${variantClass} ${className}`.trim()
+  const classes = getButtonClassName(variant, className)
 
   return <button type={type} className={classes} {...props} />
 }

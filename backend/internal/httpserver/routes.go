@@ -17,6 +17,7 @@ func HandleRoutes(a *app.App, tr trace.Tracer) http.Handler {
 	root := mux.NewRouter()
 
 	root.Use(tracer.TracerMiddleware(tr))
+	root.Use(corsMiddleware)
 	root.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(rw).Encode("success")
 	})
@@ -27,4 +28,19 @@ func HandleRoutes(a *app.App, tr trace.Tracer) http.Handler {
 	root.HandleFunc("/api/v1/type/suggestion", teambuilder.GetTypesSuggestion(a)).Methods(http.MethodGet)
 
 	return http.TimeoutHandler(root, 30*time.Second, "Request Timeout")
+}
+
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }

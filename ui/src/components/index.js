@@ -1,5 +1,6 @@
 export { default as Badge } from './badge/Badge'
 export { default as Button } from './button/Button'
+export { default as ButtonLink } from './button/ButtonLink'
 export { default as Card } from './card/Card'
 export { default as Checkbox } from './checkbox/Checkbox'
 export { default as Input } from './input/Input'

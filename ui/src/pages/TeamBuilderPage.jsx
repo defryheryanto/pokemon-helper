@@ -4,6 +4,90 @@ import { typeColorMap } from '../components/theme'
 import useInfinitePokemons from '../hooks/useInfinitePokemons'
 import { fetchTeamSimulation } from '../services/teamBuilderService'
 
+const baseStatusKeys = [
+  'hp',
+  'attack',
+  'defense',
+  'special_attack',
+  'special_defense',
+  'speed',
+]
+const baseStatusLabels = {
+  hp: 'HP',
+  attack: 'Attack',
+  defense: 'Defense',
+  special_attack: 'Sp. Atk',
+  special_defense: 'Sp. Def',
+  speed: 'Speed',
+  total: 'Total',
+}
+
+const getPokemonTotal = (pokemon) => {
+  const baseStatus = pokemon?.base_status ?? pokemon?.baseStatus
+  if (!baseStatus) {
+    return null
+  }
+
+  if (Number.isFinite(baseStatus.total)) {
+    return baseStatus.total
+  }
+
+  let total = 0
+  let hasValue = false
+  baseStatusKeys.forEach((key) => {
+    const value = baseStatus[key]
+    if (Number.isFinite(value)) {
+      total += value
+      hasValue = true
+    }
+  })
+
+  return hasValue ? total : null
+}
+
+const getPokemonStatusDetails = (pokemon) => {
+  const baseStatus = pokemon?.base_status ?? pokemon?.baseStatus
+  if (!baseStatus) {
+    return []
+  }
+
+  const details = []
+  baseStatusKeys.forEach((key) => {
+    const value = baseStatus[key]
+    if (Number.isFinite(value)) {
+      details.push({ key, label: baseStatusLabels[key] ?? key, value })
+    }
+  })
+
+  if (Number.isFinite(baseStatus.total)) {
+    details.push({ key: 'total', label: baseStatusLabels.total, value: baseStatus.total })
+  }
+
+  return details
+}
+
+const getStatusValueClass = (value) => {
+  if (!Number.isFinite(value)) {
+    return ''
+  }
+  if (value > 150) {
+    return 'stat-value stat-value--150'
+  }
+  if (value > 120) {
+    return 'stat-value stat-value--120'
+  }
+  if (value > 100) {
+    return 'stat-value stat-value--100'
+  }
+  if (value > 50) {
+    return 'stat-value stat-value--50'
+  }
+  if (value > 0) {
+    return 'stat-value stat-value--0'
+  }
+  return 'stat-value'
+}
+
 function TeamBuilderPage() {
   const [searchInput, setSearchInput] = useState('')
   const [selectedElement, setSelectedElement] = useState('')
@@ -246,6 +330,8 @@ function TeamBuilderPage() {
               <div className="team-list" ref={listRef}>
                 {pokemons.map((pokemon) => {
                   const isSelected = teamNames.has(pokemon.name)
+                  const totalStatus = getPokemonTotal(pokemon)
+                  const statusDetails = getPokemonStatusDetails(pokemon)
                   return (
                     <div className="team-list-item" key={`${pokemon.id}-${pokemon.name}`}>
                       <div className="team-list-sprite">
@@ -265,6 +351,35 @@ function TeamBuilderPage() {
                                 type={String(type)}
                               />
                             ))}
+                          </div>
+                        ) : null}
+                        {totalStatus !== null ? (
+                          <div className="pokemon-total-row">
+                            <span className="pokemon-total">Total Stats {totalStatus}</span>
+                            {statusDetails.length ? (
+                              <span className="info-tooltip">
+                                <button
+                                  type="button"
+                                  className="info-button"
+                                  aria-label="Base status details"
+                                >
+                                  i
+                                </button>
+                                <div className="info-tooltip-content">
+                                  {statusDetails.map((detail) => (
+                                    <div
+                                      className="info-tooltip-row"
+                                      key={`${pokemon.id}-${detail.key}`}
+                                    >
+                                      <span>{detail.label}</span>
+                                      <span className={getStatusValueClass(detail.value)}>
+                                        {detail.value}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </span>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>
@@ -299,36 +414,70 @@ function TeamBuilderPage() {
           subtitle="Slots auto-fill based on your picks."
         >
           <div className="team-preview team-preview--builder">
-            {teamSlots.map((pokemon, index) => (
-              <button
-                type="button"
-                key={`team-slot-${index}`}
-                className={`team-slot team-slot-button ${pokemon ? 'filled' : 'muted'}`}
-                onClick={() => (pokemon ? handleRemove(pokemon) : null)}
-                disabled={!pokemon}
-              >
-                {pokemon ? (
-                  <div className="team-slot-content">
-                    <div className="team-slot-sprite">
-                      <img src={pokemon.sprites} alt={pokemon.name} loading="lazy" />
-                    </div>
-                    <span className="team-slot-name">{pokemon.name}</span>
-                    {Array.isArray(pokemon.types) && pokemon.types.length ? (
-                      <div className="badge-row pokemon-type-row">
-                        {pokemon.types.map((type, index) => (
-                          <TypeBadge
-                            key={`${pokemon.id}-${String(type)}-${index}`}
-                            type={String(type)}
-                          />
-                        ))}
+            {teamSlots.map((pokemon, index) => {
+              const totalStatus = pokemon ? getPokemonTotal(pokemon) : null
+              const statusDetails = pokemon ? getPokemonStatusDetails(pokemon) : []
+              return (
+                <button
+                  type="button"
+                  key={`team-slot-${index}`}
+                  className={`team-slot team-slot-button ${pokemon ? 'filled' : 'muted'}`}
+                  onClick={() => (pokemon ? handleRemove(pokemon) : null)}
+                  disabled={!pokemon}
+                >
+                  {pokemon ? (
+                    <div className="team-slot-content">
+                      <div className="team-slot-sprite">
+                        <img src={pokemon.sprites} alt={pokemon.name} loading="lazy" />
                       </div>
-                    ) : null}
-                  </div>
-                ) : (
-                  `Slot ${index + 1}`
-                )}
-              </button>
-            ))}
+                      <span className="team-slot-name">{pokemon.name}</span>
+                      {Array.isArray(pokemon.types) && pokemon.types.length ? (
+                        <div className="badge-row pokemon-type-row">
+                          {pokemon.types.map((type, index) => (
+                            <TypeBadge
+                              key={`${pokemon.id}-${String(type)}-${index}`}
+                              type={String(type)}
+                            />
+                          ))}
+                        </div>
+                      ) : null}
+                      {totalStatus !== null ? (
+                        <div className="pokemon-total-row">
+                          <span className="pokemon-total">Total {totalStatus}</span>
+                          {statusDetails.length ? (
+                            <span className="info-tooltip">
+                              <button
+                                type="button"
+                                className="info-button"
+                                aria-label="Base status details"
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                i
+                              </button>
+                              <div className="info-tooltip-content">
+                                {statusDetails.map((detail) => (
+                                  <div
+                                    className="info-tooltip-row"
+                                    key={`${pokemon.id}-${detail.key}`}
+                                  >
+                                    <span>{detail.label}</span>
+                                    <span className={getStatusValueClass(detail.value)}>
+                                      {detail.value}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    `Slot ${index + 1}`
+                  )}
+                </button>
+              )
+            })}
           </div>
 
           <div className="team-coverage">

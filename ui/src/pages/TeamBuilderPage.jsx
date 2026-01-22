@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Card, TypeBadge } from '../components'
 import { typeColorMap } from '../components/theme'
-import useInfinitePokemons from '../hooks/useInfinitePokemons'
+import usePaginatedPokemons from '../hooks/usePaginatedPokemons'
 import { fetchTeamSimulation } from '../services/teamBuilderService'
 
 const baseStatusKeys = [
@@ -95,13 +95,13 @@ function TeamBuilderPage() {
   const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false)
   const {
     pokemons,
+    page,
+    setPage,
     isLoading,
-    isLoadingMore,
     error,
-    loadMore,
     hasMore,
-  } = useInfinitePokemons({
-    pageSize: 36,
+  } = usePaginatedPokemons({
+    pageSize: 8,
     search: activeFilters.search,
     elementType: activeFilters.elementType,
   })
@@ -111,31 +111,7 @@ function TeamBuilderPage() {
   const [suggestionTypes, setSuggestionTypes] = useState([])
   const [isSimulating, setIsSimulating] = useState(false)
   const [simulateError, setSimulateError] = useState(null)
-  const listRef = useRef(null)
-  const sentinelRef = useRef(null)
-
   const elementTypes = useMemo(() => Object.keys(typeColorMap).sort(), [])
-
-  useEffect(() => {
-    const sentinel = sentinelRef.current
-    const list = listRef.current
-    if (!sentinel || !list || !hasMore) {
-      return undefined
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          loadMore()
-        }
-      },
-      { root: list, rootMargin: '160px' },
-    )
-
-    observer.observe(sentinel)
-
-    return () => observer.disconnect()
-  }, [hasMore, loadMore])
 
   useEffect(() => {
     if (team.length === 0) {
@@ -231,6 +207,7 @@ function TeamBuilderPage() {
       search: searchInput.trim(),
       elementType: selectedElement,
     })
+    setPage(1)
     setIsTypeMenuOpen(false)
   }
 
@@ -327,7 +304,7 @@ function TeamBuilderPage() {
             ) : null}
 
             {!isLoading && !error ? (
-              <div className="team-list" ref={listRef}>
+              <div className="team-list">
                 {pokemons.map((pokemon) => {
                   const isSelected = teamNames.has(pokemon.name)
                   const totalStatus = getPokemonTotal(pokemon)
@@ -396,14 +373,27 @@ function TeamBuilderPage() {
                     </div>
                   )
                 })}
-                {hasMore ? (
-                  <div ref={sentinelRef} className="team-list-sentinel" />
-                ) : null}
               </div>
             ) : null}
 
-            {!error && isLoadingMore ? (
-              <div className="pokemon-status">Loading more Pokemon...</div>
+            {!error && !isLoading ? (
+              <div className="team-list-pagination">
+                <Button
+                  variant="secondary"
+                  onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                  disabled={isLoading || page === 1}
+                >
+                  Prev
+                </Button>
+                <span className="team-list-page-indicator">Page {page}</span>
+                <Button
+                  variant="secondary"
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disabled={isLoading || !hasMore}
+                >
+                  Next
+                </Button>
+              </div>
             ) : null}
           </div>
         </Card>

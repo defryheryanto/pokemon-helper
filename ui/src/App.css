@@ -370,6 +370,20 @@
   flex: 1;
 }
 
+.team-list-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.team-list-page-indicator {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
 .team-list-item {
   display: grid;
   grid-template-columns: auto 1fr auto;

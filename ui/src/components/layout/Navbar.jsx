@@ -12,9 +12,9 @@ function Navbar() {
         <ButtonLink variant="ghost" to="/pokemons">
           Pokemon
         </ButtonLink>
-        <Button variant="ghost" type="button">
+        <ButtonLink variant="ghost" to="/team-builder">
           Team Builder
-        </Button>
+        </ButtonLink>
       </div>
     </nav>
   )

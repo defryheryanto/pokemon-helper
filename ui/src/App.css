@@ -228,6 +228,152 @@
   animation: fade-up 0.7s ease both;
 }
 
+.team-builder-page {
+  display: grid;
+  gap: var(--space-5);
+  animation: fade-up 0.7s ease both;
+}
+
+.team-builder-layout {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: minmax(260px, 1.1fr) minmax(320px, 1.4fr);
+  align-items: stretch;
+  min-height: 70vh;
+}
+
+.team-list-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  height: 100%;
+}
+
+.team-list-card,
+.team-summary-card {
+  grid-template-rows: auto 1fr;
+  height: 100%;
+}
+
+.team-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow: auto;
+  min-height: 0;
+  padding-right: 4px;
+  flex: 1;
+}
+
+.team-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.team-list-sprite {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--color-surface-muted);
+  display: grid;
+  place-items: center;
+}
+
+.team-list-sprite img {
+  width: 36px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.team-list-name {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.team-list-action {
+  min-width: 84px;
+}
+
+.team-list-sentinel {
+  height: 1px;
+}
+
+.team-summary-card .badge-row {
+  margin-top: var(--space-2);
+}
+
+.team-preview--builder {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.team-slot-button {
+  text-align: center;
+  cursor: pointer;
+}
+
+.team-slot-button:disabled {
+  cursor: default;
+}
+
+.team-slot.filled {
+  border-style: solid;
+  background: var(--color-surface);
+}
+
+.team-slot-content {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+
+.team-slot-sprite {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--color-surface-muted);
+  display: grid;
+  place-items: center;
+}
+
+.team-slot-sprite img {
+  width: 40px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.team-slot-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.team-coverage {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.team-coverage-section {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.team-coverage-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.team-coverage-error {
+  color: var(--color-semantic-error);
+}
+
 .pokemon-status {
   border-radius: var(--radius-md);
   padding: var(--space-3);
@@ -371,6 +517,10 @@
   .pokemon-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .team-builder-layout {
+    grid-template-columns: minmax(240px, 1fr);
+  }
 }
 
 @media (max-width: 720px) {
@@ -388,6 +538,10 @@
   }
 
   .pokemon-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-preview--builder {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

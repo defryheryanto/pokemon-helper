@@ -16,8 +16,15 @@ export function buildApiUrl(path, params) {
   return url.toString()
 }
 
-export async function apiRequest({ method, path }, { params, signal } = {}) {
-  const response = await fetch(buildApiUrl(path, params), { method, signal })
+export async function apiRequest({ method, path }, { params, signal, body } = {}) {
+  const options = { method, signal }
+
+  if (body !== undefined) {
+    options.headers = { 'Content-Type': 'application/json' }
+    options.body = JSON.stringify(body)
+  }
+
+  const response = await fetch(buildApiUrl(path, params), options)
 
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`)

@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import HomePage from './pages/HomePage'
 import PokemonsPage from './pages/PokemonsPage'
+import TeamBuilderPage from './pages/TeamBuilderPage'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/pokemons" element={<PokemonsPage />} />
+          <Route path="/team-builder" element={<TeamBuilderPage />} />
         </Routes>
 
         <footer className="footer">

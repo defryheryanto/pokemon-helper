@@ -18,12 +18,26 @@ func HandleRoutes(a *app.App, tr trace.Tracer) http.Handler {
 
 	root.Use(tracer.TracerMiddleware(tr))
 	root.Use(corsMiddleware)
+	root.MethodNotAllowedHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		applyCORSHeaders(w, r)
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	})
 	root.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(rw).Encode("success")
+	})
+	root.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
 	})
 
 	root.HandleFunc("/api/v1/pokemons", pokedex.GetAllPokedex(a)).Methods(http.MethodGet)
 	root.HandleFunc("/api/v1/pokemons/{pokemonName}", pokedex.GetPokedex(a)).Methods(http.MethodGet)
+	root.HandleFunc("/api/v1/simulate-team", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	}).Methods(http.MethodOptions)
 	root.HandleFunc("/api/v1/simulate-team", teambuilder.SimulateTeam(a)).Methods(http.MethodPost)
 	root.HandleFunc("/api/v1/type/suggestion", teambuilder.GetTypesSuggestion(a)).Methods(http.MethodGet)
 
@@ -32,9 +46,7 @@ func HandleRoutes(a *app.App, tr trace.Tracer) http.Handler {
 
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		applyCORSHeaders(w, r)
 
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
@@ -43,4 +55,19 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func applyCORSHeaders(w http.ResponseWriter, r *http.Request) {
+	origin := r.Header.Get("Origin")
+	if origin == "" {
+		origin = "*"
+	}
+	w.Header().Set("Access-Control-Allow-Origin", origin)
+	w.Header().Set("Vary", "Origin")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+	w.Header().Set(
+		"Access-Control-Allow-Headers",
+		"Accept, Authorization, Content-Type, Origin, X-Requested-With",
+	)
+	w.Header().Set("Access-Control-Max-Age", "86400")
 }

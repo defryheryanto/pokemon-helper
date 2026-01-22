@@ -7,21 +7,25 @@ import (
 var c config
 
 type config struct {
-	HostPort           string `mapstructure:"HOST_PORT"`
-	LoggerFilepath     string `mapstructure:"LOGGER_FILEPATH"`
-	RedisNetwork       string `mapstructure:"REDIS_NETWORK"`
-	RedisAddress       string `mapstructure:"REDIS_ADDRESS"`
-	RedisDB            int    `mapstructure:"REDIS_DB"`
-	RedisUsername      string `mapstructure:"REDIS_USERNAME"`
-	RedisPassword      string `mapstructure:"REDIS_PASSWORD"`
-	TracingEnabled     bool   `mapstructure:"TRACING_ENABLED"`
-	JaegerCollectorURL string `mapstructure:"JAEGER_COLLECTOR_URL"`
-	Environment        string `mapstructure:"ENVIRONMENT"`
+	HostPort                 string `mapstructure:"HOST_PORT"`
+	LoggerFilepath           string `mapstructure:"LOGGER_FILEPATH"`
+	DatabaseConnectionString string `mapstructure:"DATABASE_CONNECTION_STRING"`
+	RedisNetwork             string `mapstructure:"REDIS_NETWORK"`
+	RedisAddress             string `mapstructure:"REDIS_ADDRESS"`
+	RedisDB                  int    `mapstructure:"REDIS_DB"`
+	RedisUsername            string `mapstructure:"REDIS_USERNAME"`
+	RedisPassword            string `mapstructure:"REDIS_PASSWORD"`
+	TracingEnabled           bool   `mapstructure:"TRACING_ENABLED"`
+	JaegerCollectorURL       string `mapstructure:"JAEGER_COLLECTOR_URL"`
+	Environment              string `mapstructure:"ENVIRONMENT"`
 }
 
 func (cfg *config) ValidateKeys() {
 	if cfg.HostPort == "" {
 		panic("ENV HOST_PORT is empty")
+	}
+	if cfg.DatabaseConnectionString == "" {
+		panic("ENV DATABASE_CONNECTION_STRING is empty")
 	}
 	if cfg.LoggerFilepath == "" {
 		panic("ENV LOGGER_FILEPATH is empty")
@@ -40,6 +44,7 @@ func (cfg *config) ValidateKeys() {
 func Load() {
 	viper.BindEnv("HOST_PORT")
 	viper.BindEnv("LOGGER_FILEPATH")
+	viper.BindEnv("DATABASE_CONNECTION_STRING")
 	viper.BindEnv("REDIS_NETWORK")
 	viper.BindEnv("REDIS_ADDRESS")
 	viper.BindEnv("REDIS_DB")
@@ -63,6 +68,10 @@ func HostPort() string {
 
 func LoggerFilepath() string {
 	return c.LoggerFilepath
+}
+
+func DatabaseConnectionString() string {
+	return c.DatabaseConnectionString
 }
 
 func RedisNetwork() string {

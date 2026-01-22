@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/defryheryanto/pokemon-helper/config"
+	"github.com/defryheryanto/pokemon-helper/internal/app"
 	"github.com/defryheryanto/pokemon-helper/internal/httpserver"
 	"github.com/defryheryanto/pokemon-helper/internal/logger"
 	otel "go.opentelemetry.io/otel"
@@ -30,10 +31,11 @@ func main() {
 	var appserver *http.Server
 	go func() {
 		redisClient := setupRedis()
-		app := BuildApp(redisClient, tracer)
+		db := setupDB()
+		application := app.BuildApp(redisClient, tracer, db)
 		appserver = &http.Server{
 			Addr:    fmt.Sprintf(":%s", config.HostPort()),
-			Handler: httpserver.HandleRoutes(app, tracer),
+			Handler: httpserver.HandleRoutes(application, tracer),
 		}
 		logger.Print(fmt.Sprintf("Application Server listening on %s", appserver.Addr))
 		err := appserver.ListenAndServe()

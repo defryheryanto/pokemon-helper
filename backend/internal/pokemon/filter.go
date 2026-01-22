@@ -6,6 +6,8 @@ type GetFilter struct {
 }
 
 type ListFilter struct {
-	Limit  int
-	Offset int
+	Limit       int
+	Offset      int
+	Search      string
+	ElementType string
 }

@@ -250,6 +250,111 @@
   height: 100%;
 }
 
+.team-list-filters {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.team-filter-field {
+  display: grid;
+  gap: 6px;
+}
+
+.team-filter-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.team-filter-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.team-filter-input:focus {
+  border-color: color-mix(in srgb, var(--color-brand-primary) 60%, var(--color-border));
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.team-filter-dropdown {
+  position: relative;
+}
+
+.team-filter-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.team-filter-placeholder {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.team-filter-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: var(--space-2);
+  display: grid;
+  gap: var(--space-2);
+  max-height: 240px;
+  overflow: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.team-filter-option {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.team-filter-option:hover,
+.team-filter-option:focus {
+  background: var(--color-surface-muted);
+  border-color: var(--color-border);
+  outline: none;
+}
+
+.team-filter-option-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.team-filter-submit {
+  justify-self: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 .team-list-card,
 .team-summary-card {
   grid-template-rows: auto 1fr;
@@ -536,6 +641,10 @@
 
   .team-builder-layout {
     grid-template-columns: minmax(240px, 1fr);
+  }
+
+  .team-list-filters {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

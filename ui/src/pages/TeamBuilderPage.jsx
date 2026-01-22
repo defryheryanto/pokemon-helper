@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button, Card, TypeBadge } from '../components'
+import { typeColorMap } from '../components/theme'
 import useInfinitePokemons from '../hooks/useInfinitePokemons'
 import { fetchTeamSimulation } from '../services/teamBuilderService'
 
 function TeamBuilderPage() {
+  const [searchInput, setSearchInput] = useState('')
+  const [selectedElement, setSelectedElement] = useState('')
+  const [activeFilters, setActiveFilters] = useState({ search: '', elementType: '' })
+  const [isTypeMenuOpen, setIsTypeMenuOpen] = useState(false)
   const {
     pokemons,
     isLoading,
@@ -11,7 +16,11 @@ function TeamBuilderPage() {
     error,
     loadMore,
     hasMore,
-  } = useInfinitePokemons({ pageSize: 36 })
+  } = useInfinitePokemons({
+    pageSize: 36,
+    search: activeFilters.search,
+    elementType: activeFilters.elementType,
+  })
   const [team, setTeam] = useState([])
   const [coveredTypes, setCoveredTypes] = useState([])
   const [uncoveredTypes, setUncoveredTypes] = useState([])
@@ -20,6 +29,8 @@ function TeamBuilderPage() {
   const [simulateError, setSimulateError] = useState(null)
   const listRef = useRef(null)
   const sentinelRef = useRef(null)
+
+  const elementTypes = useMemo(() => Object.keys(typeColorMap).sort(), [])
 
   useEffect(() => {
     const sentinel = sentinelRef.current
@@ -130,6 +141,21 @@ function TeamBuilderPage() {
     setTeam((prev) => prev.filter((member) => member.name !== pokemon.name))
   }
 
+  const handleFilterSubmit = (event) => {
+    event.preventDefault()
+    setActiveFilters({
+      search: searchInput.trim(),
+      elementType: selectedElement,
+    })
+    setIsTypeMenuOpen(false)
+  }
+
+  const handleDropdownBlur = (event) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setIsTypeMenuOpen(false)
+    }
+  }
+
   return (
     <section className="team-builder-page">
       <div className="section-header">
@@ -147,6 +173,68 @@ function TeamBuilderPage() {
           subtitle="Add up to six Pokemon to simulate coverage."
         >
           <div className="team-list-body">
+            <form className="team-list-filters" onSubmit={handleFilterSubmit}>
+              <label className="team-filter-field">
+                <span className="team-filter-label">Search</span>
+                <input
+                  className="team-filter-input"
+                  type="search"
+                  placeholder="Search by name"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                />
+              </label>
+              <div className="team-filter-field">
+                <span className="team-filter-label">Element type</span>
+                <div
+                  className="team-filter-dropdown"
+                  tabIndex={0}
+                  onBlur={handleDropdownBlur}
+                >
+                  <button
+                    type="button"
+                    className="team-filter-toggle"
+                    onClick={() => setIsTypeMenuOpen((prev) => !prev)}
+                  >
+                    {selectedElement ? (
+                      <TypeBadge type={selectedElement} />
+                    ) : (
+                      <span className="team-filter-placeholder">All elements</span>
+                    )}
+                  </button>
+                  {isTypeMenuOpen ? (
+                    <div className="team-filter-menu">
+                      <button
+                        type="button"
+                        className="team-filter-option"
+                        onClick={() => {
+                          setSelectedElement('')
+                          setIsTypeMenuOpen(false)
+                        }}
+                      >
+                        <span className="team-filter-option-text">All elements</span>
+                      </button>
+                      {elementTypes.map((type) => (
+                        <button
+                          type="button"
+                          className="team-filter-option"
+                          key={type}
+                          onClick={() => {
+                            setSelectedElement(type)
+                            setIsTypeMenuOpen(false)
+                          }}
+                        >
+                          <TypeBadge type={type} />
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+              <Button type="submit" className="team-filter-submit">
+                Search
+              </Button>
+            </form>
             {isLoading ? <div className="pokemon-status">Loading Pokemon...</div> : null}
             {error ? (
               <div className="pokemon-status error">

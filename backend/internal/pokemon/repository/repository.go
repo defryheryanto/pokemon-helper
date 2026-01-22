@@ -146,10 +146,31 @@ func scanPokemonRows(rows *sql.Rows) (*PokemonEntity, error) {
 func buildListQuery(filter pokemon.ListFilter) (string, []interface{}) {
 	query := strings.Builder{}
 	query.WriteString(queryListPokemons)
-	query.WriteString(" ORDER BY id")
 
 	args := []interface{}{}
 	argIndex := 1
+
+	whereClauses := []string{}
+	search := strings.TrimSpace(filter.Search)
+	if search != "" {
+		whereClauses = append(whereClauses, fmt.Sprintf("name ILIKE $%d", argIndex))
+		args = append(args, fmt.Sprintf("%%%s%%", search))
+		argIndex++
+	}
+
+	elementType := strings.TrimSpace(filter.ElementType)
+	if elementType != "" {
+		whereClauses = append(whereClauses, fmt.Sprintf("types ? $%d", argIndex))
+		args = append(args, strings.ToLower(elementType))
+		argIndex++
+	}
+
+	if len(whereClauses) > 0 {
+		query.WriteString(" WHERE ")
+		query.WriteString(strings.Join(whereClauses, " AND "))
+	}
+
+	query.WriteString(" ORDER BY id")
 
 	if filter.Limit > 0 {
 		query.WriteString(fmt.Sprintf(" LIMIT $%d", argIndex))

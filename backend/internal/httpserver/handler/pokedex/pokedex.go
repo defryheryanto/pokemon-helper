@@ -3,6 +3,7 @@ package pokedex
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/defryheryanto/pokemon-helper/internal/app"
 	"github.com/defryheryanto/pokemon-helper/internal/errors"
@@ -27,9 +28,13 @@ func GetAllPokedex(application *app.App) http.HandlerFunc {
 		}
 
 		offset := (page - 1) * pageSize
+		search := strings.TrimSpace(r.URL.Query().Get("search"))
+		elementType := strings.TrimSpace(r.URL.Query().Get("elementType"))
 		pokemons, err := application.Pokemon.List(r.Context(), pokemon.ListFilter{
-			Limit:  pageSize,
-			Offset: offset,
+			Limit:       pageSize,
+			Offset:      offset,
+			Search:      search,
+			ElementType: elementType,
 		})
 		if err != nil {
 			return err

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { fetchPokemons } from '../services/pokemonService'
 
-function useInfinitePokemons({ pageSize = 50 } = {}) {
+function useInfinitePokemons({ pageSize = 50, search = '', elementType = '' } = {}) {
   const [pokemons, setPokemons] = useState([])
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
@@ -9,6 +9,12 @@ function useInfinitePokemons({ pageSize = 50 } = {}) {
   const [error, setError] = useState(null)
   const [hasMore, setHasMore] = useState(true)
   const inFlightRef = useRef(false)
+
+  useEffect(() => {
+    setPage(1)
+    setPokemons([])
+    setHasMore(true)
+  }, [search, elementType, pageSize])
 
   const loadMore = useCallback(() => {
     if (inFlightRef.current || !hasMore) {
@@ -35,6 +41,8 @@ function useInfinitePokemons({ pageSize = 50 } = {}) {
         const data = await fetchPokemons({
           page,
           pageSize,
+          search,
+          elementType,
           signal: controller.signal,
         })
 
@@ -66,7 +74,7 @@ function useInfinitePokemons({ pageSize = 50 } = {}) {
       isMounted = false
       controller.abort()
     }
-  }, [page, pageSize])
+  }, [page, pageSize, search, elementType])
 
   return {
     pokemons,

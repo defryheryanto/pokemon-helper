@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { TypeBadge } from '../components'
 import useInfinitePokemons from '../hooks/useInfinitePokemons'
 
 function PokemonsPage() {
@@ -59,6 +60,16 @@ function PokemonsPage() {
                 <img src={pokemon.sprites} alt={pokemon.name} loading="lazy" />
               </div>
               <span className="pokemon-name">{pokemon.name}</span>
+              {Array.isArray(pokemon.types) && pokemon.types.length ? (
+                <div className="badge-row pokemon-type-row">
+                  {pokemon.types.map((type, index) => (
+                    <TypeBadge
+                      key={`${pokemon.id}-${String(type)}-${index}`}
+                      type={String(type)}
+                    />
+                  ))}
+                </div>
+              ) : null}
             </div>
           ))}
         </div>

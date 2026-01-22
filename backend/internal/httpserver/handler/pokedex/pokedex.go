@@ -8,7 +8,7 @@ import (
 	"github.com/defryheryanto/pokemon-helper/internal/errors"
 	"github.com/defryheryanto/pokemon-helper/internal/httpserver/handler"
 	"github.com/defryheryanto/pokemon-helper/internal/httpserver/response"
-	"github.com/defryheryanto/pokemon-helper/internal/pokedex"
+	"github.com/defryheryanto/pokemon-helper/internal/pokemon"
 	"github.com/gorilla/mux"
 )
 
@@ -26,16 +26,13 @@ func GetAllPokedex(application *app.App) http.HandlerFunc {
 			pageSize = 50
 		}
 
-		pokemons, err := application.Pokedex.GetAllPokedex(r.Context(), pokedex.GetAllPokedexFilter{
-			Page:     page,
-			PageSize: pageSize,
+		offset := (page - 1) * pageSize
+		pokemons, err := application.Pokemon.List(r.Context(), pokemon.ListFilter{
+			Limit:  pageSize,
+			Offset: offset,
 		})
 		if err != nil {
 			return err
-		}
-
-		for i, pokemon := range pokemons {
-			pokemons[i].Sprites = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + strconv.Itoa(pokemon.ID) + ".png"
 		}
 
 		response.WithData(w, http.StatusOK, map[string]interface{}{
@@ -48,7 +45,7 @@ func GetAllPokedex(application *app.App) http.HandlerFunc {
 func GetPokedex(application *app.App) http.HandlerFunc {
 	return handler.Handle(func(w http.ResponseWriter, r *http.Request) error {
 		pokemoNname := mux.Vars(r)["pokemonName"]
-		data, err := application.Pokedex.GetPokedex(r.Context(), pokemoNname)
+		data, err := application.Pokemon.GetByName(r.Context(), pokemoNname)
 		if err != nil {
 			return err
 		}

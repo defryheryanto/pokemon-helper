@@ -169,6 +169,16 @@ function TeamBuilderPage() {
                       </div>
                       <div className="team-list-info">
                         <span className="team-list-name">{pokemon.name}</span>
+                        {Array.isArray(pokemon.types) && pokemon.types.length ? (
+                          <div className="badge-row pokemon-type-row">
+                            {pokemon.types.map((type, index) => (
+                              <TypeBadge
+                                key={`${pokemon.id}-${String(type)}-${index}`}
+                                type={String(type)}
+                              />
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
                       <Button
                         variant={isSelected ? 'secondary' : 'ghost'}
@@ -215,6 +225,16 @@ function TeamBuilderPage() {
                       <img src={pokemon.sprites} alt={pokemon.name} loading="lazy" />
                     </div>
                     <span className="team-slot-name">{pokemon.name}</span>
+                    {Array.isArray(pokemon.types) && pokemon.types.length ? (
+                      <div className="badge-row pokemon-type-row">
+                        {pokemon.types.map((type, index) => (
+                          <TypeBadge
+                            key={`${pokemon.id}-${String(type)}-${index}`}
+                            type={String(type)}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   `Slot ${index + 1}`

@@ -400,6 +400,7 @@
   border: 1px solid var(--color-border);
   border-radius: 16px;
   padding: var(--space-3);
+  padding-bottom: calc(var(--space-3) + 6px);
   display: grid;
   gap: 8px;
   justify-items: center;
@@ -440,6 +441,21 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-3);
+}
+
+.pokemon-type-row {
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.team-list-info .pokemon-type-row {
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+
+.team-slot .pokemon-type-row {
+  justify-content: center;
+  margin-top: 4px;
 }
 
 .cta-row {

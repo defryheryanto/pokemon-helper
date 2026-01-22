@@ -19,7 +19,7 @@ const (
 	queryGetPokemonByName = `
 		SELECT id, name, base_status, types, sprites
 		FROM pokemons
-		WHERE name = $1
+		WHERE LOWER(name) = LOWER($1)
 	`
 	queryListPokemons = `
 		SELECT id, name, base_status, types, sprites

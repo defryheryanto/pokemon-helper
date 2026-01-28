@@ -9,10 +9,10 @@ function Navbar() {
         <img src={iconText} alt="PokeLab" />
       </Link>
       <div className="nav-links">
-        <ButtonLink variant="ghost" to="/pokemons">
+        <ButtonLink variant="ghost" className="nav-link" to="/pokemons">
           Pokemon
         </ButtonLink>
-        <ButtonLink variant="ghost" to="/team-builder">
+        <ButtonLink variant="ghost" className="nav-link" to="/team-builder">
           Team Builder
         </ButtonLink>
       </div>

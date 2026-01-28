@@ -37,8 +37,9 @@
 
 .app {
   margin: 0 auto;
-  max-width: 80%;
-  padding: clamp(24px, 4vw, 56px);
+  max-width: 1120px;
+  width: min(1120px, 100%);
+  padding: clamp(20px, 4vw, 56px);
   display: grid;
   gap: clamp(28px, 5vw, 56px);
   position: relative;
@@ -59,6 +60,7 @@
   top: 16px;
   z-index: 2;
   backdrop-filter: blur(12px);
+  width: 100%;
 }
 
 .brand {
@@ -376,6 +378,7 @@
   justify-content: space-between;
   gap: var(--space-2);
   margin-top: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .team-list-page-indicator {
@@ -773,9 +776,38 @@
 }
 
 @media (max-width: 720px) {
+  .app {
+    padding: 18px;
+    gap: clamp(20px, 6vw, 36px);
+  }
+
   .topbar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    top: 10px;
+  }
+
+  .brand {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .brand img {
+    width: 130px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-link {
+    flex: 1 1 140px;
+    text-align: center;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
   }
 
   .hero-stats {
@@ -792,6 +824,53 @@
 
   .team-preview--builder {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-actions > *,
+  .cta-row > * {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .team-list-item {
+    grid-template-columns: 52px 1fr;
+    grid-template-areas:
+      "sprite info"
+      "action action";
+    align-items: start;
+  }
+
+  .team-list-sprite {
+    grid-area: sprite;
+  }
+
+  .team-list-info {
+    grid-area: info;
+  }
+
+  .team-list-action {
+    grid-area: action;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .team-list-pagination {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand img {
+    width: 118px;
+  }
+
+  .pokemon-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pokemon-card {
+    min-height: 160px;
   }
 }
 

@@ -1,5 +1,7 @@
 package pokedex
 
+//go:generate go run github.com/golang/mock/mockgen -source=interface.go -package=mock -destination=mock/mock.go
+
 import (
 	"context"
 
